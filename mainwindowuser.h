@@ -16,8 +16,6 @@ public:
     ~MainWindow();
 
 private slots:
-    // This is the slot for your main window's "Add Bus" button click
-    void on_pushButton_clicked();
 
     // THIS LINE IS CRITICAL: It declares the receiver slot for the data packet
     void handleBusAddition(QString id, QString route, QString seats, QString available, QString departure, QString price);

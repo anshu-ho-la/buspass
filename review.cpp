@@ -1,3 +1,4 @@
+
 #include "review.h"
 #include "ui_review.h"
 #include <QLineEdit>
@@ -22,7 +23,7 @@ bool review::checkReview(QString reviewtext)
 
 review::review(QWidget *parent)
     : QWidget(parent)
-    , ui(new UI::review)
+    , ui(new Ui::review)
 {
     ui->setupUi(this);
     ui->titleLabel->setStyleSheet("font-size: 20px; font-weight: bold; margin-bottom: 4px;");
@@ -33,7 +34,7 @@ void review::submitReview()
 {
     QString reviewtext = ui->reviewTextLineEdit->toPlainText().trimmed();
     if (reviewtext.isEmpty()) {
-        setfeedback(this,"Please write a review.");
+        setfeedback("Please write a review.");
         return;
     }
     if (checkReview(reviewtext)) {
@@ -55,3 +56,4 @@ void review::resetForm()
 void review::setfeedback(QString message){
     ui->feedbackLabel->setText(message);
 }
+

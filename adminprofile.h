@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
+#include <QString>
 
 class adminprofile : public QWidget
 {
@@ -27,7 +28,7 @@ private:
     QString currentusername;
 
     void admininfo();
-    bool verifypassword(Qstring password);
+    bool verifypassword(QString password);
     void Addadmin();
 };
 

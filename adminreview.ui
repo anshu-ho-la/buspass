@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>adminreview</class>
+ <widget class="QWidget" name="adminreview">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Admin – Reviews</string>
+  </property>
+
+  <layout class="QVBoxLayout" name="outerVLayout">
+   <property name="spacing"><number>8</number></property>
+   <property name="margin"><number>12</number></property>
+
+   <!-- Page title -->
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="text"><string>User Reviews</string></property>
+    </widget>
+   </item>
+
+   <!-- Scrollable list of review bodies -->
+   <item>
+    <widget class="QListWidget" name="reviewsListWidget">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::NoSelection</enum>
+     </property>
+     <property name="wordWrap"><bool>true</bool></property>
+    </widget>
+   </item>
+
+   <!-- Refresh button -->
+   <item>
+    <widget class="QPushButton" name="refreshButton">
+     <property name="text"><string>Refresh</string></property>
+    </widget>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

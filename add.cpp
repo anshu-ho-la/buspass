@@ -21,7 +21,7 @@ void add::on_pushButton_clicked()
     QString id = ui->txtID->text().trimmed();
     QString route = ui->txtRoute->text().trimmed();
     QString seats = ui->txtSeats->text().trimmed();
-    QString available = ui->txtAv->text().trimmed();
+    QString available = ui->txtSeats->text().trimmed();
     QString departure = ui->txtDep->text().trimmed();
     QString price = ui->lineEdit_6->text().trimmed(); // From your UI screenshot object tree
 

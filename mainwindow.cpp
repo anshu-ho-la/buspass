@@ -1,12 +1,31 @@
 #include "mainwindow.h"
 #include "ui_mainwindowadmin.h"
 #include "add.h" // Makes sure MainWindow knows what the Add page is
+#include "login.h"
+#include "pageswitch.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    QWidget *innerWidget = ui->centralwidget->findChild<QWidget*>();
+    if (innerWidget && innerWidget->layout()) {
+        addNavBar(innerWidget,
+                  {"Login", "Booking History", "Profile", "Review"},
+                  {
+                      [this]() { openPage<login>(this); },
+                      [this]() { openPage<login>(this); },
+                      [this]() { openPage<login>(this); },
+                      [this]() { openPage<login>(this); }
+                  });    }
+
+    addNavBar(ui->centralwidget,
+              {"Login"},
+              {
+               [this]() { openPage<login>(this); },
+               });
 }
 
 MainWindow::~MainWindow()
@@ -40,3 +59,6 @@ void MainWindow::handleBusAddition(QString id, QString route, QString seats, QSt
     ui->tableWidget->setItem(currentRow, 4, new QTableWidgetItem(departure));
     ui->tableWidget->setItem(currentRow, 5, new QTableWidgetItem(price));
 }
+
+
+

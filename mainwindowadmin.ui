@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>471</height>
+    <width>979</width>
+    <height>548</height>
    </rect>
   </property>
   <property name="font">
@@ -20,95 +20,95 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>0</y>
-      <width>391</width>
-      <height>91</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Yu Gothic UI Semibold</family>
-      <pointsize>28</pointsize>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Available Buses</string>
-    </property>
-   </widget>
-   <widget class="QTableWidget" name="tableWidget">
+   <property name="font">
+    <font>
+     <family>Segoe UI Variable Small Light</family>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>90</y>
-      <width>741</width>
-      <height>251</height>
+      <y>0</y>
+      <width>891</width>
+      <height>481</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Segoe UI Variable Small Light</family>
-      <pointsize>10</pointsize>
-     </font>
-    </property>
-    <column>
-     <property name="text">
-      <string>Bus ID</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Route</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Total Seats</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Available Seats</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Departure</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Price</string>
-     </property>
-    </column>
-    <column>
-     <property name="text">
-      <string>Book Here</string>
-     </property>
-    </column>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>350</y>
-      <width>151</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Segoe UI Variable Small Light</family>
-      <pointsize>16</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Add Bus</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>Yu Gothic UI Semibold</family>
+         <pointsize>28</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Available Buses</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="font">
+        <font>
+         <family>Segoe UI Variable Small Light</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <column>
+        <property name="text">
+         <string>Bus ID</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Route</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Total Seats</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Available Seats</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Departure</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Price</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Book Here</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="font">
+        <font>
+         <family>Segoe UI Variable Small Light</family>
+         <pointsize>16</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Add Bus</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
