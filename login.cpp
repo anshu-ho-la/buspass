@@ -26,10 +26,21 @@ bool login::checkCredentials(QString username, QString password)
         int id = query.value(0).toInt();
         Session::instance().login(id);
 
+        int isadmin = query.value(5).toInt();
+
+
+        if (isadmin==0){
         MainWindow *d = new MainWindow();
         d->show();
         this->close();
         return true;
+        }
+        else if (isadmin==1){
+        MainWindow *d = new MainWindow();
+        d->show();
+        this->close();
+        return true;
+        }
     }
 
     return false;
