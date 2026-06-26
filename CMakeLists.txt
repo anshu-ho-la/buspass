@@ -21,7 +21,7 @@ set(PROJECT_SOURCES
         signup.ui
         signup.h
         signup.cpp
-        mainwindow.ui
+        mainwindowadmin.ui
         mainwindow.h
         mainwindow.cpp
         review.cpp
@@ -45,6 +45,9 @@ qt_add_executable(buspass
             add.h add.cpp add.ui
             review.h
             adminprofile.h
+            mainwindowuser.ui
+            mainwindowuser.h
+            mainwindowuser.cpp
 
     )
 # Define target properties for Android with Qt 6 as:
