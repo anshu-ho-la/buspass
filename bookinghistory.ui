@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>560</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>My Booking History</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="titleLabel">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>100</y>
+      <width>560</width>
+      <height>36</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>My Booking History</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblBusID">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>220</y>
+      <width>90</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Bus ID</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblRoute">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>220</y>
+      <width>110</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Route</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblDep">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>220</y>
+      <width>110</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Departure</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblArr">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>220</y>
+      <width>100</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Arrival</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblSeat">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>220</y>
+      <width>70</width>
+      <height>24</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Seat No</string>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>260</y>
+      <width>90</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>260</y>
+      <width>110</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>260</y>
+      <width>110</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>260</y>
+      <width>100</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="listWidget_5">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>260</y>
+      <width>70</width>
+      <height>71</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

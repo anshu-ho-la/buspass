@@ -24,6 +24,12 @@ set(PROJECT_SOURCES
         mainwindow.ui
         mainwindow.h
         mainwindow.cpp
+        bookinghistory.cpp
+        bookinghistory.h
+        bookinghistory.ui
+        bookings.cpp
+        bookings.h
+        bookings.ui
 <<<<<<< HEAD
         review.cpp
         review.h
