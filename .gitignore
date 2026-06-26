@@ -9,8 +9,6 @@ CMakeCache.txt
 cmake_install.cmake
 Makefile
 CMakeLists.txt.user
-CMakeLists.txt
-CMakeLists
 # Qt generated
 *.autosave
 moc_*
