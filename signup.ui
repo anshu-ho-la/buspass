@@ -134,17 +134,20 @@
     <string>Already have an account?</string>
    </property>
   </widget>
-  <widget class="QCommandLinkButton" name="login_button">
+  <widget class="QPushButton" name="login_button">
    <property name="geometry">
     <rect>
-     <x>280</x>
-     <y>360</y>
-     <width>81</width>
-     <height>41</height>
+     <x>270</x>
+     <y>370</y>
+     <width>51</width>
+     <height>21</height>
     </rect>
    </property>
    <property name="text">
-    <string>Login</string>
+    <string>login</string>
+   </property>
+   <property name="flat">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>
