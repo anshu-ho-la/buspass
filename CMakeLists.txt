@@ -21,9 +21,10 @@ set(PROJECT_SOURCES
         signup.ui
         signup.h
         signup.cpp
-        mainwindow.ui
+        mainwindowadmin.ui
         mainwindow.h
         mainwindow.cpp
+<<<<<<< HEAD
 <<<<<<< HEAD
         userreview.cpp
         userreview.h
@@ -40,6 +41,14 @@ set(PROJECT_SOURCES
 =======
         pageswitch.h
 >>>>>>> 13a2202a57f0061074db60fe6317427a1521662b
+=======
+        review.cpp
+        review.h
+        review.ui
+        adminprofile.cpp
+        adminprofile.h
+        adminprofile.ui
+>>>>>>> adf30ff494fe9997571ef8f43d4b535fe7f66270
     )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -52,6 +61,7 @@ qt_add_executable(buspass
             signup.ui
             session.h
             database.h
+<<<<<<< HEAD
 <<<<<<< HEAD
             userreview.h
             adminreview.h
@@ -73,6 +83,14 @@ qt_add_executable(buspass
             adminreview.ui
             pageswitch.h
 >>>>>>> 13a2202a57f0061074db60fe6317427a1521662b
+=======
+            add.h add.cpp add.ui
+            review.h
+            adminprofile.h
+            mainwindowuser.ui
+            mainwindowuser.h
+            mainwindowuser.cpp
+>>>>>>> adf30ff494fe9997571ef8f43d4b535fe7f66270
 
     )
 # Define target properties for Android with Qt 6 as:

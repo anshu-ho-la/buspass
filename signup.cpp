@@ -1,8 +1,7 @@
 #include "signup.h"
 #include "login.h"
-
 #include "ui_signup.h"
-
+#include <qregularexpression.h>
 signup::signup(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::signup)
@@ -17,6 +16,8 @@ void signup::on_signup_button_clicked()
     QString password = ui->password->text().trimmed();
     QString username = ui->username->text().trimmed();
     QString email = ui->email->text().trimmed();
+
+    QRegularExpression rx("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
     if (name.isEmpty() || password.isEmpty() || username.isEmpty() || email.isEmpty()) {
         QMessageBox::warning(this, "Warning", "Please enter all fields!");
@@ -37,6 +38,9 @@ void signup::on_signup_button_clicked()
                 QMessageBox::critical(this, "Failed", "Invalid email already in use.");
 
                 return;
+            }
+            else if (!rx.match(email).hasMatch()){
+                QMessageBox::critical(this, "Failed", "Invalid email format.");
             }
             else{
                 QMessageBox::information(this, "Success", "Signup successful!");
