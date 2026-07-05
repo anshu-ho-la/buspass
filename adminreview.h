@@ -1,16 +1,18 @@
 #ifndef ADMINREVIEW_H
 #define ADMINREVIEW_H
 
+#include <QDialog>
 #include <QWidget>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QSqlError>
 
+
 namespace Ui {
 class adminreview;
 }
 
-class adminreview : public QWidget
+class adminreview : public QDialog
 {
     Q_OBJECT
 
@@ -19,11 +21,11 @@ public:
     ~adminreview();
 
 private slots:
-    void loadReviews();      // fetches all reviews from DB and fills the list
-    void refreshReviews();   // connected to the Refresh button
+    void refreshReviews();
 
 private:
     Ui::adminreview *ui;
+    void loadReviews();
 };
 
 #endif // ADMINREVIEW_H

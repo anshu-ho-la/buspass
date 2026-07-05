@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>userprofile</class>
- <widget class="QWidget" name="userprofile">
+ <widget class="QDialog" name="userprofile">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>620</height>
+    <width>380</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,34 +15,32 @@
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <property name="spacing">
-    <number>10</number>
+    <number>12</number>
    </property>
    <property name="leftMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
    <property name="topMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
    <property name="rightMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
    <property name="bottomMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
    <item>
+    <widget class="QLabel" name="UserNameLabel">
+     <property name="text">
+      <string>User Name</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignHCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="displayusername">
-     <property name="minimumSize">
-      <size>
-       <width>360</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>360</width>
-       <height>50</height>
-      </size>
-     </property>
      <property name="text">
       <string>Username</string>
      </property>
@@ -52,70 +50,26 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_username">
+    <widget class="QLabel" name="displayemail">
      <property name="text">
-      <string>Change Username</string>
+      <string>Email</string>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="newUsernameLineEdit">
-     <property name="placeholderText">
-      <string>New username</string>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignHCenter</set>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="updateUsernameBtn">
      <property name="text">
-      <string>Update Username</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="label_password">
-     <property name="text">
-      <string>Change Password</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="currentPasswordLineEdit">
-     <property name="echoMode">
-      <enum>QLineEdit::EchoMode::Password</enum>
-     </property>
-     <property name="placeholderText">
-      <string>Current password</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="newPasswordLineEdit">
-     <property name="echoMode">
-      <enum>QLineEdit::EchoMode::Password</enum>
-     </property>
-     <property name="placeholderText">
-      <string>New password</string>
+      <string>Change Username</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="updatePasswordBtn">
      <property name="text">
-      <string>Update Password</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="feedbackLabel">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignHCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
+      <string>Change Password</string>
      </property>
     </widget>
    </item>

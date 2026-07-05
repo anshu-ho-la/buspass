@@ -25,23 +25,20 @@ set(PROJECT_SOURCES
         mainwindow.h
         mainwindow.cpp
 <<<<<<< HEAD
-        review.cpp
-        review.h
-        review.ui
+        userreview.cpp
+        userreview.h
+        userreview.ui
         adminprofile.cpp
         adminprofile.h
         adminprofile.ui
         userprofile.cpp
         userprofile.h
         userprofile.ui
+        adminreview.cpp
+        adminreview.h
+        adminreview.ui
 =======
         pageswitch.h
-        adminprofile.cpp
-        adminprofile.h
-        adminprofile.ui
-        review.cpp
-        review.h
-        review.ui
 >>>>>>> 13a2202a57f0061074db60fe6317427a1521662b
     )
 
@@ -56,13 +53,24 @@ qt_add_executable(buspass
             session.h
             database.h
 <<<<<<< HEAD
-            review.h
+            userreview.h
+            adminreview.h
             adminprofile.h
             userprofile.ui
 =======
             add.h add.cpp add.ui
+            userreview.cpp
+            userreview.h
+            userreview.ui
+            adminprofile.cpp
             adminprofile.h
-            review.h
+            adminprofile.ui
+            userprofile.cpp
+            userprofile.h
+            userprofile.ui
+            adminreview.cpp
+            adminreview.h
+            adminreview.ui
             pageswitch.h
 >>>>>>> 13a2202a57f0061074db60fe6317427a1521662b
 

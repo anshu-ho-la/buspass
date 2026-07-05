@@ -1,35 +1,39 @@
 #ifndef ADMINPROFILE_H
 #define ADMINPROFILE_H
 
-#include "ui_adminprofile.h"
-
+#include <QDialog>
 #include <QSqlError>
 #include <QString>
 #include <QWidget>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
-#include <QString>
 
-class adminprofile : public QWidget
+
+namespace Ui {
+class adminprofile;
+}
+
+class adminprofile : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit adminprofile(QString username, QWidget *parent = nullptr);
+    explicit adminprofile(QWidget *parent = nullptr);
     ~adminprofile();
 
 private slots:
-    void UpdateUsername();
-    void UpdatePassword();
+    void onChangeUsernameClicked();
+    void onChangePasswordClicked();
+    void onCreateAdminClicked();
 
 private:
     Ui::adminprofile *ui;
-
     QString currentusername;
+    QString currentEmail;
 
-    void admininfo();
-    bool verifypassword(QString password);
-    void Addadmin();
+    void adminInfo();
+    bool verifyCurrentPassword(QString password);
+
 };
 
 #endif // ADMINPROFILE_H

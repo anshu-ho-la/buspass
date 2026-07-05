@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>620</height>
+    <width>380</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,20 +15,30 @@
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <property name="spacing">
-    <number>10</number>
+    <number>12</number>
    </property>
    <property name="leftMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
    <property name="topMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
    <property name="rightMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
    <property name="bottomMargin">
-    <number>20</number>
+    <number>24</number>
    </property>
+   <item>
+    <widget class="QLabel" name="adminNameLabel">
+     <property name="text">
+      <string>Admin Name</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignHCenter</set>
+     </property>
+    </widget>
+   </item>
    <item>
     <widget class="QLabel" name="displayusername">
      <property name="text">
@@ -40,81 +50,26 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_username">
+    <widget class="QLabel" name="displayemail">
      <property name="text">
-      <string>Change Username</string>
+      <string>Email</string>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="newUsernameLineEdit">
-     <property name="placeholderText">
-      <string>New username</string>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignHCenter</set>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="updateUsernameBtn">
      <property name="text">
-      <string>Update Username</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="label_password">
-     <property name="text">
-      <string>Change Password</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="currentPasswordLineEdit">
-     <property name="echoMode">
-      <enum>QLineEdit::EchoMode::Password</enum>
-     </property>
-     <property name="placeholderText">
-      <string>Current password</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="newPasswordLineEdit">
-     <property name="echoMode">
-      <enum>QLineEdit::EchoMode::Password</enum>
-     </property>
-     <property name="placeholderText">
-      <string>New password</string>
+      <string>Change Username</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="updatePasswordBtn">
      <property name="text">
-      <string>Update Password</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="label_createAdmin">
-     <property name="text">
-      <string>Create Admin Account</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="newAdminUsernameLineEdit">
-     <property name="placeholderText">
-      <string>Username</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="newAdminPasswordLineEdit">
-     <property name="echoMode">
-      <enum>QLineEdit::EchoMode::Password</enum>
-     </property>
-     <property name="placeholderText">
-      <string>Password</string>
+      <string>Change Password</string>
      </property>
     </widget>
    </item>
@@ -122,19 +77,6 @@
     <widget class="QPushButton" name="createAdminBtn">
      <property name="text">
       <string>Create Admin Account</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="feedbackLabel">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignHCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
      </property>
     </widget>
    </item>

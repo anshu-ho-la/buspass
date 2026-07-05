@@ -1,39 +1,41 @@
 #ifndef USERPROFILE_H
 #define USERPROFILE_H
 
-#include "ui_userprofile.h"
-
+#include <QDialog>
 #include <QSqlError>
 #include <QString>
 #include <QWidget>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 
-class userprofile : public QWidget
+
+namespace Ui {
+class userprofile;
+}
+
+class userprofile : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit userprofile(QString username, QWidget *parent = nullptr);
+    explicit userprofile(QWidget *parent = nullptr);
     ~userprofile();
 
 private slots:
-    void UpdateUsername();
-    void UpdatePassword();
-    void CreateuserAccount();
+    // FIX: renamed to match actual method names used in .cpp
+    void onChangeUsernameClicked();
+    void onChangePasswordClicked();
 
 private:
     Ui::userprofile *ui;
 
     QString currentusername;
-    QString email;
+    QString currentEmail;
 
-    void userinfo();
-    bool verifypassword(QString password);
-    void Adduser();
+    void userInfo();
+    bool verifyCurrentPassword(QString password);
+
+
 };
-
-#endif // USERPROFILE_H
-
 
 #endif // USERPROFILE_H
