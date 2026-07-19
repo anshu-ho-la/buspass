@@ -1,6 +1,11 @@
 #include "userprofile.h"
 #include "ui_userprofile.h"
 #include "session.h"
+#include "pageswitch.h"
+#include "login.h"
+#include "usermainwindow.h"
+#include "userhistory.h"
+#include "userreview.h"
 #include <QDebug>
 #include <QLabel>
 #include <QLineEdit>
@@ -16,9 +21,24 @@ userprofile::userprofile(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::userprofile),
     currentusername(""),
+    currentName(""),
     currentEmail("")
 {
     ui->setupUi(this);
+    setWindowTitle("Buspass");
+    setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
+    ui->formCard->setAttribute(Qt::WA_StyledBackground, true);
+
+    addNavBar(this,
+              {"Book a bus", "Booking History", "Profile", "review", "Logout"},
+              {
+                  [this]() { openPage<MainWindowUser>(this); },
+                  [this]() { openPage<BookingHistory>(this); },
+                  [this]() { openPage<userprofile>(this); },
+                  [this]() { openPage<userreview>(this); },
+                  [this]() { openPage<login>(this); }
+              });
+
     int loggedInId = Session::instance().id();
     if (loggedInId != -1) {
         QSqlQuery query;
@@ -35,7 +55,6 @@ userprofile::userprofile(QWidget *parent) :
     }
     userInfo();
 
-    // FIX: was "onChangesernameClicked" (typo) — corrected to "onChangeUsernameClicked"
     connect(ui->updateUsernameBtn, &QPushButton::clicked, this, &userprofile::onChangeUsernameClicked);
     connect(ui->updatePasswordBtn, &QPushButton::clicked, this, &userprofile::onChangePasswordClicked);
 }
@@ -49,18 +68,16 @@ userprofile::~userprofile()
 void userprofile::userInfo()
 {
     QSqlQuery query;
-    query.prepare("SELECT email FROM user WHERE username = :username");
+    query.prepare("SELECT name, email FROM user WHERE username = :username");
     query.bindValue(":username", currentusername);
 
     if (query.exec() && query.next()) {
-        // FIX: was query.value(2) — email is the only selected column so index is 0
-        QString email = query.value(0).toString();
-        currentEmail  = email;
-        ui->UserNameLabel->setText(currentusername);
+        currentName  = query.value(0).toString();
+        currentEmail = query.value(1).toString();
+        ui->UserNameLabel->setText(currentName);
         ui->displayusername->setText(currentusername);
         ui->displayemail->setText(currentEmail);
     } else {
-        // FIX: was missing semicolon after setText(currentusername)
         ui->displayusername->setText(currentusername);
         qDebug() << "UserInfo error:" << query.lastError().text();
     }
@@ -94,7 +111,6 @@ void userprofile::onChangeUsernameClicked()
     QString newusername = newUsernameEdit->text().trimmed();
 
     if (newusername.isEmpty()) {
-        // FIX: was "::warning(this,QMessageBox" — inverted/broken syntax
         QMessageBox::warning(this, "Update Username", "Username field cannot be empty.");
         return;
     }
@@ -111,7 +127,6 @@ void userprofile::onChangeUsernameClicked()
     if (updateQuery.exec()) {
         currentusername = newusername;
         ui->displayusername->setText(currentusername);
-        ui->UserNameLabel->setText(currentusername);
 
         QMessageBox::information(this, "Update Username",
                                  "Username updated successfully to \"" + currentusername + "\".");
@@ -176,7 +191,6 @@ void userprofile::onChangePasswordClicked()
 
     if (updateQuery.exec()) {
         QMessageBox::information(this, "Update Password", "Password updated successfully.");
-        // FIX: was "currentUsername" (wrong case) — corrected to "currentusername"
         qDebug() << "Password updated for:" << currentusername;
     } else {
         QMessageBox::critical(this, "Update Password", "Failed to update password. Please try again.");

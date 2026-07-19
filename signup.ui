@@ -13,143 +13,211 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QLineEdit" name="name">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>90</y>
-     <width>113</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="username">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>130</y>
-     <width>113</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="password">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>170</y>
-     <width>113</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="echoMode">
-    <enum>QLineEdit::EchoMode::Password</enum>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="email">
-   <property name="geometry">
-    <rect>
-     <x>200</x>
-     <y>210</y>
-     <width>113</width>
-     <height>28</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>90</y>
-     <width>41</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>name</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>130</y>
-     <width>63</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>username</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>170</y>
-     <width>63</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>password</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>210</y>
-     <width>63</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>email</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="signup_button">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>260</y>
-     <width>90</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>signup</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>110</x>
-     <y>370</y>
-     <width>181</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Already have an account?</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="login_button">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>370</y>
-     <width>51</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>login</string>
-   </property>
-   <property name="flat">
-    <bool>true</bool>
-   </property>
-  </widget>
+  <layout class="QVBoxLayout" name="outerLayout">
+   <item>
+    <spacer name="topSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="centerRow">
+     <item>
+      <spacer name="leftSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QWidget" name="formCard">
+       <property name="minimumSize">
+        <size>
+         <width>380</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>400</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="formLayout">
+        <property name="leftMargin">
+         <number>28</number>
+        </property>
+        <property name="topMargin">
+         <number>28</number>
+        </property>
+        <property name="rightMargin">
+         <number>28</number>
+        </property>
+        <property name="bottomMargin">
+         <number>28</number>
+        </property>
+        <property name="spacing">
+         <number>12</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="cardTitleLabel">
+          <property name="font">
+           <font>
+            <pointsize>18</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Create an Account</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>name</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="name"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>username</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="username"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>password</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="password">
+          <property name="echoMode">
+           <enum>QLineEdit::EchoMode::Password</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>email</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="email"/>
+        </item>
+        <item>
+         <widget class="QPushButton" name="signup_button">
+          <property name="text">
+           <string>Sign up</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="loginRow">
+          <item>
+           <spacer name="loginLeftSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Already have an account?</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="login_button">
+            <property name="text">
+             <string>Login</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="loginRightSpacer">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>10</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="rightSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="bottomSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

@@ -16,13 +16,17 @@ inline void openPage(QWidget *currentWindow)
 {
     T *page = new T();
     page->setAttribute(Qt::WA_DeleteOnClose);
-    page->show();
+
+    if (currentWindow->isMaximized()) {
+        page->showMaximized();
+    } else {
+        page->setGeometry(currentWindow->geometry());
+        page->show();
+    }
+
     currentWindow->close();
 }
 
-// Adds a nav bar with buttons at the top of any page's central widget layout.
-// existingLayout must already exist (e.g. ui->centralwidget->layout()).
-// labels and slots must be same length and same order.
 inline void addNavBar(QWidget *centralWidget,
                       const QStringList &labels,
                       const QList<std::function<void()>> &actions)
@@ -37,11 +41,9 @@ inline void addNavBar(QWidget *centralWidget,
         navLayout->addWidget(btn);
     }
 
-    // Insert nav bar as the FIRST item, pushing everything else down
     if (QVBoxLayout *vbox = qobject_cast<QVBoxLayout*>(existingLayout)) {
         vbox->insertLayout(0, navLayout);
     } else {
-        // Fallback: wrap nav layout into a widget and add normally
         existingLayout->addItem(navLayout);
     }
 }

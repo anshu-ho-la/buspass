@@ -29,6 +29,7 @@ private slots:
 private:
     Ui::adminprofile *ui;
     QString currentusername;
+    QString currentName;
     QString currentEmail;
 
     void adminInfo();

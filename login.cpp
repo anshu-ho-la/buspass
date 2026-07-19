@@ -2,7 +2,8 @@
 #include "signup.h"
 #include "session.h"
 #include "ui_login.h"
-#include "mainwindow.h"
+#include "adminmainwindow.h"
+#include "usermainwindow.h"
 
 
 login::login(QWidget *parent)
@@ -10,7 +11,12 @@ login::login(QWidget *parent)
     , ui(new Ui::login)
 {
     ui->setupUi(this);
-    setWindowTitle("Login");
+    setWindowTitle("Buspass");
+    ui->centralwidget->setAttribute(Qt::WA_StyledBackground, true);
+    ui->formCard->setAttribute(Qt::WA_StyledBackground, true);
+
+    connect(ui->username, &QLineEdit::returnPressed, ui->login_button, &QPushButton::click);
+    connect(ui->password, &QLineEdit::returnPressed, ui->login_button, &QPushButton::click);
 }
 
 bool login::checkCredentials(QString username, QString password)
@@ -30,14 +36,24 @@ bool login::checkCredentials(QString username, QString password)
 
 
         if (isadmin==0){
-        MainWindow *d = new MainWindow();
-        d->show();
+        MainWindowUser *d = new MainWindowUser();
+        if (this->isMaximized()) {
+            d->showMaximized();
+        } else {
+            d->setGeometry(this->geometry());
+            d->show();
+        }
         this->close();
         return true;
         }
         else if (isadmin==1){
         MainWindow *d = new MainWindow();
-        d->show();
+        if (this->isMaximized()) {
+            d->showMaximized();
+        } else {
+            d->setGeometry(this->geometry());
+            d->show();
+        }
         this->close();
         return true;
         }
@@ -67,7 +83,12 @@ void login::on_login_button_clicked()
 void login::on_signup_button_clicked()
 {
     signup *s = new signup();
-    s->show();
+    if (this->isMaximized()) {
+        s->showMaximized();
+    } else {
+        s->setGeometry(this->geometry());
+        s->show();
+    }
     this->close();
 }
 

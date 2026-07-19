@@ -20,7 +20,7 @@ public:
     ~userreview();
 
 private slots:
-    void submituserreview();   // FIX — was "submitReview()", didn't match .cpp or connect()
+    void submituserreview();
     void resetForm();
 
 private:

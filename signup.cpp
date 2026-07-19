@@ -7,7 +7,14 @@ signup::signup(QWidget *parent)
     , ui(new Ui::signup)
 {
     ui->setupUi(this);
+    setWindowTitle("Buspass");
+    setAttribute(Qt::WA_StyledBackground, true);
+    ui->formCard->setAttribute(Qt::WA_StyledBackground, true);
 
+    connect(ui->name, &QLineEdit::returnPressed, ui->signup_button, &QPushButton::click);
+    connect(ui->username, &QLineEdit::returnPressed, ui->signup_button, &QPushButton::click);
+    connect(ui->email, &QLineEdit::returnPressed, ui->signup_button, &QPushButton::click);
+    connect(ui->password, &QLineEdit::returnPressed, ui->signup_button, &QPushButton::click);
 }
 
 void signup::on_signup_button_clicked()
@@ -55,7 +62,12 @@ void signup::on_signup_button_clicked()
 
                 {
                 login *s = new login();
-                s->show();
+                if (this->isMaximized()) {
+                    s->showMaximized();
+                } else {
+                    s->setGeometry(this->geometry());
+                    s->show();
+                }
                 this->close();
                 }
             }
@@ -101,7 +113,12 @@ bool signup::checkEmail(QString email)
 void signup::on_login_button_clicked()
 {
     login *s = new login();
-    s->show();
+    if (this->isMaximized()) {
+        s->showMaximized();
+    } else {
+        s->setGeometry(this->geometry());
+        s->show();
+    }
     this->close();
 }
 

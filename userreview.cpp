@@ -1,19 +1,38 @@
 #include "userreview.h"
 #include "ui_userreview.h"
-#include "session.h"              // FIX — needed to resolve logged-in username
+#include "session.h"
+#include "pageswitch.h"
+#include "login.h"
+#include "usermainwindow.h"
+#include "userhistory.h"
+#include "userprofile.h"
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QLabel>
 #include <QDialogButtonBox>
 #include <QDebug>
-#include <QtSql/QSqlQuery>        // FIX — needed for DB insert
-#include <QSqlError>              // FIX — needed for error logging
+#include <QtSql/QSqlQuery>
+#include <QSqlError>
 
 userreview::userreview(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::userreview)
 {
     ui->setupUi(this);
+    setWindowTitle("Buspass");
+    setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
+    ui->formCard->setAttribute(Qt::WA_StyledBackground, true);
+
+    addNavBar(this,
+              {"Book a bus", "Booking History", "Profile", "review", "Logout"},
+              {
+                  [this]() { openPage<MainWindowUser>(this); },
+                  [this]() { openPage<BookingHistory>(this); },
+                  [this]() { openPage<userprofile>(this); },
+                  [this]() { openPage<userreview>(this); },
+                  [this]() { openPage<login>(this); }
+              });
+
     ui->titleLabel->setStyleSheet("font-size: 20px; font-weight: bold; margin-bottom: 4px;");
     connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &userreview::submituserreview);
     connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &userreview::resetForm);
@@ -26,17 +45,14 @@ userreview::~userreview()
 
 void userreview::submituserreview()
 {
-    // FIX — title was never read or validated
-    const QString title = ui->userreviewTitleLineEdit->text().trimmed();
-    const QString body  = ui->userreviewTextEdit->toPlainText().trimmed();
+    const QString body = ui->userreviewTextEdit->toPlainText().trimmed();
 
-    if (title.isEmpty() || body.isEmpty()) {
+    if (body.isEmpty()) {
         setFeedback("Please fill in all fields.");
         return;
     }
 
-    // FIX — review was never saved to the database; now resolves
-    //        the logged-in username from Session and inserts into reviews table
+
     QString reviewer = "anonymous";
     int loggedInId = Session::instance().id();
     if (loggedInId != -1) {
@@ -67,7 +83,6 @@ void userreview::submituserreview()
 
 void userreview::resetForm()
 {
-    ui->userreviewTitleLineEdit->clear();
     ui->userreviewTextEdit->clear();
 }
 

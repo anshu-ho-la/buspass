@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>860</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Available Buses</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="titleLabel">
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Available Bookings</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tableWidget">
+     <column>
+      <property name="text">
+       <string>Passenger</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Bus Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Route</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Departure Time</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>price</string>
+      </property>
+     </column>
+     <column>
+     <property name="text">
+     <string>Seats Booked</string>
+     </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Total Price</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

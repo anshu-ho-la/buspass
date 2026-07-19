@@ -10,8 +10,10 @@ class Database
 public:
     static bool connect() {
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName("buspass.db");
-        return db.open();
+        db.setDatabaseName("buspass2.db");
+        if (!db.open()) {
+            return false;
+        }
 
         QSqlQuery query;
         query.exec("CREATE TABLE IF NOT EXISTS user ("
@@ -34,19 +36,41 @@ public:
                    ")");
 
         query.exec("CREATE TABLE IF NOT EXISTS bookings ("
-                   "userid INTEGER,"
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   "userid INTEGER NOT NULL,"
+                   "busID INTEGER,"
                    "busName TEXT NOT NULL,"
                    "route TEXT NOT NULL,"
-                   "bookedSeats INTEGER NOT NULL,"
                    "departureTime TEXT NOT NULL,"
+                   "seatsBooked INTEGER NOT NULL,"
                    "price REAL NOT NULL"
                    ")");
-        query.exec("CREATE TABLE IF NOT EXISTS review ("
-                   "userid INTEGER,"
-                   "review TEXT"
+
+        query.exec("CREATE TABLE IF NOT EXISTS reviews ("
+                   "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                   "username TEXT NOT NULL,"
+                   "review_text TEXT NOT NULL"
                    ")");
 
-      //query.exec("INSERT INTO user (username, password, name, email, isAdmin) VALUES ('admin', 'admin123', 'admin1', 'admin@example.com', 1)");
+        query.exec("INSERT OR IGNORE INTO user (username, password, name, email, isAdmin) VALUES ('admin', 'admin123', 'admin1', 'admin@example.com', 1);");
+
+
+        return true;
+    }
+
+private:
+    static void addColumnIfMissing(QSqlQuery &query, const QString &table, const QString &column, const QString &type) {
+        query.exec(QString("PRAGMA table_info(%1)").arg(table));
+        bool exists = false;
+        while (query.next()) {
+            if (query.value(1).toString().compare(column, Qt::CaseInsensitive) == 0) {
+                exists = true;
+                break;
+            }
+        }
+        if (!exists) {
+            query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 %3").arg(table, column, type));
+        }
     }
 };
 

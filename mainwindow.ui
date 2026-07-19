@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1148</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>BusPass</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="mainLayout">
+    <item>
+     <layout class="QHBoxLayout" name="navLayout">
+      <item>
+       <widget class="QPushButton" name="bookingButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Bus Booking</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="historyButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Booking History</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="profileButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Profile</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="reviewButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Review</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="font">
+       <font>
+        <family>Yu Gothic UI Semibold</family>
+        <pointsize>20</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Available Buses</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="font">
+       <font>
+        <family>Segoe UI Variable Small Light</family>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <column>
+       <property name="text">
+        <string>Bus ID</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Route</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>From</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>To</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Departure Time</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Total Seats</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Available Seats</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Price</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Book Here</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="bottomRow">
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="font">
+         <font>
+          <family>Segoe UI Variable Small Light</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Add Bus</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="prevPageButton">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="pageLabel">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Page 1 of 1</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="nextPageButton">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

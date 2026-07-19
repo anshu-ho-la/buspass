@@ -22,7 +22,6 @@ public:
     ~userprofile();
 
 private slots:
-    // FIX: renamed to match actual method names used in .cpp
     void onChangeUsernameClicked();
     void onChangePasswordClicked();
 
@@ -30,6 +29,7 @@ private:
     Ui::userprofile *ui;
 
     QString currentusername;
+    QString currentName;
     QString currentEmail;
 
     void userInfo();

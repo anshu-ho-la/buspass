@@ -1,6 +1,12 @@
 #include "adminprofile.h"
 #include "ui_adminprofile.h"
 #include "session.h"
+#include "pageswitch.h"
+#include "login.h"
+#include "adminmainwindow.h"
+#include "adminhistory.h"
+#include "adminprofile.h"
+#include "adminreview.h"
 #include <QDebug>
 #include <QLabel>
 #include <QLineEdit>
@@ -16,9 +22,23 @@ adminprofile::adminprofile(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::adminprofile),
     currentusername(""),
+    currentName(""),
     currentEmail("")
 {
     ui->setupUi(this);
+    setWindowTitle("Buspass");
+    setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint | Qt::WindowMaximizeButtonHint);
+    ui->formCard->setAttribute(Qt::WA_StyledBackground, true);
+
+    addNavBar(this,
+              {"Add Buses", "Booking History", "Profile", "Review", "Logout"},
+              {
+                  [this]() { openPage<MainWindow>(this); },
+                  [this]() { openPage<bookings>(this); },
+                  [this]() { openPage<adminprofile>(this); },
+                  [this]() { openPage<adminreview>(this); },
+                  [this]() { openPage<login>(this); }
+              });
 
     int loggedInId = Session::instance().id();
     if (loggedInId != -1) {
@@ -50,13 +70,13 @@ adminprofile::~adminprofile()
 void adminprofile::adminInfo()
 {
     QSqlQuery query;
-    query.prepare("SELECT email FROM user WHERE username = :username");
+    query.prepare("SELECT name, email FROM user WHERE username = :username");
     query.bindValue(":username", currentusername);
 
     if (query.exec() && query.next()) {
-        QString email = query.value(0).toString();
-        currentEmail  = email;
-        ui->adminNameLabel->setText(currentusername);
+        currentName  = query.value(0).toString();
+        currentEmail = query.value(1).toString();
+        ui->adminNameLabel->setText(currentName);
         ui->displayusername->setText(currentusername);
         ui->displayemail->setText(currentEmail);
     } else {
@@ -109,7 +129,6 @@ void adminprofile::onChangeUsernameClicked()
     if (updateQuery.exec()) {
         currentusername = newusername;
         ui->displayusername->setText(currentusername);
-        ui->adminNameLabel->setText(currentusername);
 
         QMessageBox::information(this, "Update Username",
                                  "Username updated successfully to \"" + currentusername + "\".");
@@ -237,7 +256,7 @@ void adminprofile::onCreateAdminClicked()
     insertQuery.prepare("INSERT INTO user (username, password, name, email, isAdmin) VALUES (:username, :password, :name, :email, :isAdmin)");
     insertQuery.bindValue(":username", username);
     insertQuery.bindValue(":password", password);
-    insertQuery.bindValue(":name",     username);   // use username as display name
+    insertQuery.bindValue(":name",     username);
     insertQuery.bindValue(":email",    "");
     insertQuery.bindValue(":isAdmin",  1);
 

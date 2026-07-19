@@ -13,72 +13,152 @@
   <property name="windowTitle">
    <string>Admin Profile</string>
   </property>
-  <layout class="QVBoxLayout" name="mainLayout">
-   <property name="spacing">
-    <number>12</number>
-   </property>
-   <property name="leftMargin">
-    <number>24</number>
-   </property>
-   <property name="topMargin">
-    <number>24</number>
-   </property>
-   <property name="rightMargin">
-    <number>24</number>
-   </property>
-   <property name="bottomMargin">
-    <number>24</number>
-   </property>
+  <layout class="QVBoxLayout" name="outerLayout">
    <item>
-    <widget class="QLabel" name="adminNameLabel">
-     <property name="text">
-      <string>Admin Name</string>
+    <spacer name="topSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignHCenter</set>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
    <item>
-    <widget class="QLabel" name="displayusername">
-     <property name="text">
-      <string>Username</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignHCenter</set>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="centerRow">
+     <item>
+      <spacer name="leftSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QWidget" name="formCard">
+       <property name="minimumSize">
+        <size>
+         <width>380</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>420</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="mainLayout">
+        <property name="spacing">
+         <number>12</number>
+        </property>
+        <property name="leftMargin">
+         <number>24</number>
+        </property>
+        <property name="topMargin">
+         <number>24</number>
+        </property>
+        <property name="rightMargin">
+         <number>24</number>
+        </property>
+        <property name="bottomMargin">
+         <number>24</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="adminNameLabel">
+          <property name="font">
+           <font>
+            <pointsize>16</pointsize>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Admin Name</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignHCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="displayusername">
+          <property name="text">
+           <string>Username</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignHCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="displayemail">
+          <property name="text">
+           <string>Email</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignHCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="updateUsernameBtn">
+          <property name="text">
+           <string>Change Username</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="updatePasswordBtn">
+          <property name="text">
+           <string>Change Password</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="createAdminBtn">
+          <property name="text">
+           <string>Create Admin Account</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <spacer name="rightSpacer">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QLabel" name="displayemail">
-     <property name="text">
-      <string>Email</string>
+    <spacer name="bottomSpacer">
+     <property name="orientation">
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignHCenter</set>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="updateUsernameBtn">
-     <property name="text">
-      <string>Change Username</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="updatePasswordBtn">
-     <property name="text">
-      <string>Change Password</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="createAdminBtn">
-     <property name="text">
-      <string>Create Admin Account</string>
-     </property>
-    </widget>
+    </spacer>
    </item>
   </layout>
  </widget>
