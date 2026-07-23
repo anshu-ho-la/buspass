@@ -1,6 +1,7 @@
 #include "signup.h"
 #include "login.h"
 #include "ui_signup.h"
+#include "passwordutil.h"
 #include <qregularexpression.h>
 signup::signup(QWidget *parent)
     : QWidget(parent)
@@ -36,12 +37,12 @@ void signup::on_signup_button_clicked()
         return;
     }
 
-        if (checkUsername(username)==1) {
+        if (checkUsername(username)) {
         QMessageBox::critical(this, "Failed", "Invalid username already taken. Try again.");
 
         return;
         }
-            else if (checkEmail(email)==1) {
+            else if (checkEmail(email)) {
                 QMessageBox::critical(this, "Failed", "Invalid email already in use.");
 
                 return;
@@ -55,7 +56,7 @@ void signup::on_signup_button_clicked()
                 QSqlQuery query;
                 query.prepare("INSERT INTO user (username, password, name, email, isAdmin) VALUES (:username, :password, :name, :email, 0)");
                 query.bindValue(":username", username);
-                query.bindValue(":password", password);
+                query.bindValue(":password", PasswordUtil::hash(password));
                 query.bindValue(":name", name);
                 query.bindValue(":email", email);
                 query.exec();

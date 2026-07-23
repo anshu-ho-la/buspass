@@ -23,8 +23,14 @@ private slots:
 private:
     Ui::MainWindowAdmin *ui;
 
+    enum class SearchMode { Date, Route };
+    SearchMode currentSearchMode = SearchMode::Date;
+
     void loadBuses();
     void deleteBus(int busID);
+    void setSearchMode(SearchMode mode);
+    void applyActiveFilter();
+    void clearBusFilter();
 };
 
 #endif

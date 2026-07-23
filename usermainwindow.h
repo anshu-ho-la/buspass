@@ -17,10 +17,15 @@ public:
 
 private:
     Ui::MainWindowUserForm *ui;
+    enum class SearchMode { Date, Route };
+    SearchMode currentSearchMode = SearchMode::Date;
 
     void loadBuses();
     void bookSeat(int busID, const QString &busName, const QString &route,
                   const QString &departureTime, double price);
+    void setSearchMode(SearchMode mode);
+    void applyActiveFilter();
+    void clearBusFilter();
 };
 
 #endif // USERMAINWINDOW_H

@@ -18,8 +18,20 @@ public:
 private:
     Ui::BookingHistoryForm *ui;
 
+    QString currentUsername;
+    QString currentName;
+
+    enum class SearchMode { Date, Route };
+    SearchMode currentSearchMode = SearchMode::Date;
+
     void loadBookings();
     void editBooking(int bookingId, int busID, int currentSeats);
+    void downloadTicket(int bookingId, const QString &busName, const QString &route,
+                        const QString &departureTime, double price, int seatsBooked);
+    void setSearchMode(SearchMode mode);
+    void filterBookingsByDateRange();
+    void applyActiveFilter();
+    void clearBookingFilter();
 };
 
 #endif // USERHISTORY_H

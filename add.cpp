@@ -34,6 +34,20 @@ void add::on_pushButton_clicked()
         return;
     }
 
+    bool seatsOk = false;
+    int seatsValue = seats.toInt(&seatsOk);
+    if (!seatsOk || seatsValue <= 0) {
+        QMessageBox::warning(this, "Invalid Seats", "Total seats must be a whole number greater than 0.");
+        return;
+    }
+
+    bool priceOk = false;
+    double priceValue = price.toDouble(&priceOk);
+    if (!priceOk || priceValue <= 0) {
+        QMessageBox::warning(this, "Invalid Price", "Price must be a number greater than 0.");
+        return;
+    }
+
     emit busAdded(busName, route, seats, available, departure, price);
 
     this->close();

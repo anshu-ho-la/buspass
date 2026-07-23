@@ -5,10 +5,21 @@
 #include "adminmainwindow.h"
 #include "adminprofile.h"
 #include "adminreview.h"
+#include "adminusers.h"
 #include <QtSql/QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
 #include <QHeaderView>
+#include <QtSql/QSqlQuery>
+#include <QSqlError>
+#include <QMessageBox>
+#include <QPushButton>
+#include <QDateTime>
+#include <QHeaderView>
+#include <QDateEdit>
+#include <QMenu>
+#include <QDebug>
+#include <QTableWidgetItem>
 
 bookings::bookings(QWidget *parent)
     : QDialog(parent)
@@ -20,18 +31,32 @@ bookings::bookings(QWidget *parent)
 
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableWidget->setAlternatingRowColors(true);
+    ui->tableWidget->verticalHeader()->setDefaultSectionSize(34);
 
     addNavBar(this,
-              {"Add Buses", "Booking History", "Profile", "Review", "Logout"},
+              {"Add Buses", "Booking History", "Profile", "Review", "Users", "Logout"},
               {
                   [this]() { openPage<MainWindow>(this); },
                   [this]() { openPage<bookings>(this); },
                   [this]() { openPage<adminprofile>(this); },
                   [this]() { openPage<adminreview>(this); },
+                  [this]() { openPage<adminusers>(this); },
                   [this]() { openPage<login>(this); }
               });
+    ui->dateToFilter->setDate(QDate::currentDate().addYears(1));
 
-    loadBookings();
+    QMenu *searchMenu = new QMenu(this);
+    searchMenu->addAction("Search by Date", this, [this]() { setSearchMode(SearchMode::Date); });
+    searchMenu->addAction("Search by Route", this, [this]() { setSearchMode(SearchMode::Route); });
+    ui->searchModeBtn->setMenu(searchMenu);
+
+    connect(ui->dateFromFilter, &QDateEdit::dateChanged, this, &bookings::applyActiveFilter);
+    connect(ui->dateToFilter, &QDateEdit::dateChanged, this, &bookings::applyActiveFilter);
+    connect(ui->searchBar, &QLineEdit::textChanged, this, &bookings::applyActiveFilter);
+    connect(ui->clearFilterBtn, &QPushButton::clicked, this, &bookings::clearBusFilter);
+
+    loadbookings();
 }
 
 bookings::~bookings()
@@ -39,8 +64,9 @@ bookings::~bookings()
     delete ui;
 }
 
-void bookings::loadBookings()
+void bookings::loadbookings()
 {
+    ui->tableWidget->setSortingEnabled(false);
     ui->tableWidget->setRowCount(0);
 
     QSqlQuery query(
@@ -76,4 +102,52 @@ void bookings::loadBookings()
     }
 
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableWidget->setSortingEnabled(true);
+}
+
+void bookings::setSearchMode(SearchMode mode)
+{
+    currentSearchMode = mode;
+
+    const bool dateMode = (mode == SearchMode::Date);
+    ui->fromLabel->setVisible(dateMode);
+    ui->dateFromFilter->setVisible(dateMode);
+    ui->toLabel->setVisible(dateMode);
+    ui->dateToFilter->setVisible(dateMode);
+    ui->searchBar->setVisible(!dateMode);
+
+    applyActiveFilter();
+}
+
+void bookings::applyActiveFilter()
+{
+    if (currentSearchMode == SearchMode::Route) {
+        const QString text = ui->searchBar->text();
+        for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+            QTableWidgetItem *routeItem = ui->tableWidget->item(row, 2);
+            const bool matches = routeItem && routeItem->text().contains(text, Qt::CaseInsensitive);
+            ui->tableWidget->setRowHidden(row, !matches);
+        }
+        return;
+    }
+
+    const QDate fromDate = ui->dateFromFilter->date();
+    const QDate toDate = ui->dateToFilter->date();
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        QTableWidgetItem *departureItem = ui->tableWidget->item(row, 3);
+        if (!departureItem) {
+            ui->tableWidget->setRowHidden(row, true);
+            continue;
+        }
+        const QDateTime departureDT = QDateTime::fromString(departureItem->text(), "yyyy-MM-dd HH:mm:ss");
+        const bool matches = departureDT.isValid() && departureDT.date() >= fromDate && departureDT.date() <= toDate;
+        ui->tableWidget->setRowHidden(row, !matches);
+    }
+}
+
+void bookings::clearBusFilter()
+{
+    for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
+        ui->tableWidget->setRowHidden(row, false);
+    }
 }

@@ -4,6 +4,9 @@
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QSqlError>
+#include <QList>
+#include <QPair>
+#include "passwordutil.h"
 
 class Database
 {
@@ -52,8 +55,31 @@ public:
                    "review_text TEXT NOT NULL"
                    ")");
 
-        query.exec("INSERT OR IGNORE INTO user (username, password, name, email, isAdmin) VALUES ('admin', 'admin123', 'admin1', 'admin@example.com', 1);");
+        QSqlQuery seedAdmin;
+        seedAdmin.prepare("INSERT OR IGNORE INTO user (username, password, name, email, isAdmin) "
+                          "VALUES ('admin', :password, 'admin1', 'admin@example.com', 1)");
+        seedAdmin.bindValue(":password", PasswordUtil::hash("admin123"));
+        seedAdmin.exec();
 
+        // MIGRATION: hash any password that predates hashing being introduced.
+        // Safe to run on every launch - already-hashed passwords are left alone.
+        QSqlQuery userQuery;
+        userQuery.exec("SELECT id, password FROM user");
+        QList<QPair<int, QString>> toHash;
+        while (userQuery.next()) {
+            int id = userQuery.value(0).toInt();
+            QString storedPassword = userQuery.value(1).toString();
+            if (!PasswordUtil::looksHashed(storedPassword)) {
+                toHash.append({id, storedPassword});
+            }
+        }
+        for (const auto &pair : toHash) {
+            QSqlQuery upgradeQuery;
+            upgradeQuery.prepare("UPDATE user SET password = :hashed WHERE id = :id");
+            upgradeQuery.bindValue(":hashed", PasswordUtil::hash(pair.second));
+            upgradeQuery.bindValue(":id", pair.first);
+            upgradeQuery.exec();
+        }
 
         return true;
     }

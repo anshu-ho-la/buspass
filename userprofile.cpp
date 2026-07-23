@@ -6,6 +6,7 @@
 #include "usermainwindow.h"
 #include "userhistory.h"
 #include "userreview.h"
+#include "passwordutil.h"
 #include <QDebug>
 #include <QLabel>
 #include <QLineEdit>
@@ -186,7 +187,7 @@ void userprofile::onChangePasswordClicked()
 
     QSqlQuery updateQuery;
     updateQuery.prepare("UPDATE user SET password = :newpassword WHERE username = :username");
-    updateQuery.bindValue(":newpassword", newpassword);
+    updateQuery.bindValue(":newpassword", PasswordUtil::hash(newpassword));
     updateQuery.bindValue(":username", currentusername);
 
     if (updateQuery.exec()) {
@@ -205,7 +206,7 @@ bool userprofile::verifyCurrentPassword(QString enteredPassword)
     query.bindValue(":username", currentusername);
 
     if (query.exec() && query.next()) {
-        return query.value(0).toString() == enteredPassword;
+        return query.value(0).toString() == PasswordUtil::hash(enteredPassword);
     }
     return false;
 }

@@ -18,7 +18,14 @@ public:
 private:
     Ui::Dialog *ui;
 
-    void loadBookings();
+
+    enum class SearchMode { Date, Route };
+    SearchMode currentSearchMode = SearchMode::Date;
+
+    void loadbookings();
+    void setSearchMode(SearchMode mode);
+    void applyActiveFilter();
+    void clearBusFilter();
 };
 
-#endif // ADMINHISTORY_H
+#endif

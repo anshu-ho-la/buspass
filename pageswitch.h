@@ -37,6 +37,9 @@ inline void addNavBar(QWidget *centralWidget,
     QHBoxLayout *navLayout = new QHBoxLayout();
     for (int i = 0; i < labels.size(); ++i) {
         QPushButton *btn = new QPushButton(labels[i], centralWidget);
+        if (labels[i].compare("Logout", Qt::CaseInsensitive) == 0) {
+            btn->setProperty("danger", true);
+        }
         QObject::connect(btn, &QPushButton::clicked, centralWidget, actions[i]);
         navLayout->addWidget(btn);
     }

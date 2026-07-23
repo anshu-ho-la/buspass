@@ -4,6 +4,7 @@
 #include "ui_login.h"
 #include "adminmainwindow.h"
 #include "usermainwindow.h"
+#include "passwordutil.h"
 
 
 login::login(QWidget *parent)
@@ -25,7 +26,7 @@ bool login::checkCredentials(QString username, QString password)
 
     query.prepare("SELECT * FROM user WHERE username = :username AND password = :password");
     query.bindValue(":username", username);
-    query.bindValue(":password", password);
+    query.bindValue(":password", PasswordUtil::hash(password));
     query.exec();
 
     if (query.next()) {

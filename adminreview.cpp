@@ -5,6 +5,7 @@
 #include "adminmainwindow.h"
 #include "adminhistory.h"
 #include "adminprofile.h"
+#include "adminusers.h"
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QPushButton>
@@ -23,12 +24,13 @@ adminreview::adminreview(QWidget *parent) :
     ui->formCard->setAttribute(Qt::WA_StyledBackground, true);
 
     addNavBar(this,
-              {"Add Buses", "Booking History", "Profile", "Review", "Logout"},
+              {"Add Buses", "Booking History", "Profile", "Review", "Users", "Logout"},
               {
                   [this]() { openPage<MainWindow>(this); },
                   [this]() { openPage<bookings>(this); },
                   [this]() { openPage<adminprofile>(this); },
                   [this]() { openPage<adminreview>(this); },
+                  [this]() { openPage<adminusers>(this); },
                   [this]() { openPage<login>(this); }
               });
 

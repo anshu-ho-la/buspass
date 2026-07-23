@@ -1,7 +1,7 @@
 #ifndef SIGNUP_H
 #define SIGNUP_H
 
-#include <QMainWindow>
+#include <QWidget>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
 #include <QSqlError>

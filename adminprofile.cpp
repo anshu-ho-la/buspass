@@ -7,6 +7,8 @@
 #include "adminhistory.h"
 #include "adminprofile.h"
 #include "adminreview.h"
+#include "adminusers.h"
+#include "passwordutil.h"
 #include <QDebug>
 #include <QLabel>
 #include <QLineEdit>
@@ -31,12 +33,13 @@ adminprofile::adminprofile(QWidget *parent) :
     ui->formCard->setAttribute(Qt::WA_StyledBackground, true);
 
     addNavBar(this,
-              {"Add Buses", "Booking History", "Profile", "Review", "Logout"},
+              {"Add Buses", "Booking History", "Profile", "Review", "Users", "Logout"},
               {
                   [this]() { openPage<MainWindow>(this); },
                   [this]() { openPage<bookings>(this); },
                   [this]() { openPage<adminprofile>(this); },
                   [this]() { openPage<adminreview>(this); },
+                  [this]() { openPage<adminusers>(this); },
                   [this]() { openPage<login>(this); }
               });
 
@@ -188,7 +191,7 @@ void adminprofile::onChangePasswordClicked()
 
     QSqlQuery updateQuery;
     updateQuery.prepare("UPDATE user SET password = :newpassword WHERE username = :username");
-    updateQuery.bindValue(":newpassword", newpassword);
+    updateQuery.bindValue(":newpassword", PasswordUtil::hash(newpassword));
     updateQuery.bindValue(":username", currentusername);
 
     if (updateQuery.exec()) {
@@ -207,7 +210,7 @@ bool adminprofile::verifyCurrentPassword(QString enteredPassword)
     query.bindValue(":username", currentusername);
 
     if (query.exec() && query.next()) {
-        return query.value(0).toString() == enteredPassword;
+        return query.value(0).toString() == PasswordUtil::hash(enteredPassword);
     }
     return false;
 }
@@ -255,7 +258,7 @@ void adminprofile::onCreateAdminClicked()
     QSqlQuery insertQuery;
     insertQuery.prepare("INSERT INTO user (username, password, name, email, isAdmin) VALUES (:username, :password, :name, :email, :isAdmin)");
     insertQuery.bindValue(":username", username);
-    insertQuery.bindValue(":password", password);
+    insertQuery.bindValue(":password", PasswordUtil::hash(password));
     insertQuery.bindValue(":name",     username);
     insertQuery.bindValue(":email",    "");
     insertQuery.bindValue(":isAdmin",  1);
