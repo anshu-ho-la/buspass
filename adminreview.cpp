@@ -57,19 +57,19 @@ void adminreview::loadReviews()
         return;
     }
 
-    int count = 0;
+    reviewCount = 0;
     while (query.next()) {
-        const QString username = query.value("username").toString();
-        const QString body     = query.value("review_text").toString();
+        reviewUsername = query.value("username").toString();
+        reviewBody     = query.value("review_text").toString();
 
-        const QString entryText = username + ": " + body;
+        reviewEntryText = reviewUsername + ": " + reviewBody;
 
-        QListWidgetItem *item = new QListWidgetItem(entryText, ui->reviewsListWidget);
-        item->setToolTip(body);
-        ++count;
+        QListWidgetItem *item = new QListWidgetItem(reviewEntryText, ui->reviewsListWidget);
+        item->setToolTip(reviewBody);
+        ++reviewCount;
     }
 
-    if (count == 0) {
+    if (reviewCount == 0) {
         ui->reviewsListWidget->addItem("No reviews have been submitted yet.");
     }
 }

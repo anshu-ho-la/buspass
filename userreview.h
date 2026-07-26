@@ -25,6 +25,11 @@ private slots:
 
 private:
     Ui::userreview *ui;
+
+    QString reviewBody;
+    QString reviewer;
+    int loggedInId;
+
     void setFeedback(QString message);
 };
 

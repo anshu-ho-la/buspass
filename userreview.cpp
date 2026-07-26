@@ -45,16 +45,16 @@ userreview::~userreview()
 
 void userreview::submituserreview()
 {
-    const QString body = ui->userreviewTextEdit->toPlainText().trimmed();
+    reviewBody = ui->userreviewTextEdit->toPlainText().trimmed();
 
-    if (body.isEmpty()) {
+    if (reviewBody.isEmpty()) {
         setFeedback("Please fill in all fields.");
         return;
     }
 
 
-    QString reviewer = "anonymous";
-    int loggedInId = Session::instance().id();
+    reviewer = "anonymous";
+    loggedInId = Session::instance().id();
     if (loggedInId != -1) {
         QSqlQuery userQuery;
         userQuery.prepare("SELECT username FROM user WHERE id = :id");
@@ -69,7 +69,7 @@ void userreview::submituserreview()
         "INSERT INTO reviews (username, review_text) VALUES (:username, :review)"
         );
     insertQuery.bindValue(":username", reviewer);
-    insertQuery.bindValue(":review",   body);
+    insertQuery.bindValue(":review",   reviewBody);
 
     if (insertQuery.exec()) {
         setFeedback("Review submitted successfully!");

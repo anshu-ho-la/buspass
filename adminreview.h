@@ -25,6 +25,11 @@ private slots:
 
 private:
     Ui::adminreview *ui;
+    int reviewCount;
+    QString reviewUsername;
+    QString reviewBody;
+    QString reviewEntryText;
+
     void loadReviews();
 };
 

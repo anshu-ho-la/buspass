@@ -7,6 +7,7 @@
 #include "userprofile.h"
 #include "userreview.h"
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlDatabase>
 #include <QSqlError>
 #include <QDebug>
 #include <QTableWidgetItem>
@@ -78,7 +79,7 @@ void BookingHistory::loadBookings()
     ui->tableWidget->setSortingEnabled(false);
     ui->tableWidget->setRowCount(0);
 
-    int loggedInId = Session::instance().id();
+    loggedInId = Session::instance().id();
     if (loggedInId == -1) {
         return;
     }
@@ -104,38 +105,47 @@ void BookingHistory::loadBookings()
     const QDateTime now = QDateTime::currentDateTime();
 
     while (query.next()) {
-        const int bookingId          = query.value(0).toInt();
-        const int busID              = query.value(1).toInt();
-        const QString busName        = query.value(2).toString();
-        const QString route          = query.value(3).toString();
-        const QString departureTime  = query.value(4).toString();
-        const double price           = query.value(5).toDouble();
-        const int seatsBooked        = query.value(6).toInt();
+        rowBookingId          = query.value(0).toInt();
+        rowBusID              = query.value(1).toInt();
+        rowBusName        = query.value(2).toString();
+        rowRoute          = query.value(3).toString();
+        rowDepartureTime  = query.value(4).toString();
+        rowPrice           = query.value(5).toDouble();
+        rowSeatsBooked        = query.value(6).toInt();
 
-        const QDateTime departureDT = QDateTime::fromString(departureTime, "yyyy-MM-dd HH:mm:ss");
+        const QDateTime departureDT = QDateTime::fromString(rowDepartureTime, "yyyy-MM-dd HH:mm:ss");
         const bool alreadyDeparted = departureDT.isValid() && departureDT <= now;
 
         int row = ui->tableWidget->rowCount();
         ui->tableWidget->insertRow(row);
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(busName));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(route));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(departureTime));
-        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(QString::number(price, 'f', 2)));
-        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(seatsBooked)));
-        ui->tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(price * seatsBooked, 'f', 2)));
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(rowBusName));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(rowRoute));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(rowDepartureTime));
+        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(QString::number(rowPrice, 'f', 2)));
+        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(rowSeatsBooked)));
+        ui->tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(rowPrice * rowSeatsBooked, 'f', 2)));
 
         QPushButton *editBtn = new QPushButton(alreadyDeparted ? "Departed" : "Edit", ui->tableWidget);
         editBtn->setEnabled(!alreadyDeparted);
         editBtn->setProperty("tableButton", true);
-        connect(editBtn, &QPushButton::clicked, this, [this, bookingId, busID, seatsBooked]() {
-            editBooking(bookingId, busID, seatsBooked);
+        connect(editBtn, &QPushButton::clicked, this, [this, bookingId = rowBookingId, busID = rowBusID, seatsBooked = rowSeatsBooked]() {
+            editBookingId = bookingId;
+            editBusID = busID;
+            editCurrentSeats = seatsBooked;
+            editBooking();
         });
         ui->tableWidget->setCellWidget(row, 6, editBtn);
 
         QPushButton *ticketBtn = new QPushButton("Download", ui->tableWidget);
         ticketBtn->setProperty("tableButton", true);
-        connect(ticketBtn, &QPushButton::clicked, this, [this, bookingId, busName, route, departureTime, price, seatsBooked]() {
-            downloadTicket(bookingId, busName, route, departureTime, price, seatsBooked);
+        connect(ticketBtn, &QPushButton::clicked, this, [this, bookingId = rowBookingId, busName = rowBusName, route = rowRoute, departureTime = rowDepartureTime, price = rowPrice, seatsBooked = rowSeatsBooked]() {
+            ticketBookingId = bookingId;
+            ticketBusName = busName;
+            ticketRoute = route;
+            ticketDepartureTime = departureTime;
+            ticketPrice = price;
+            ticketSeatsBooked = seatsBooked;
+            downloadTicket();
         });
         ui->tableWidget->setCellWidget(row, 7, ticketBtn);
     }
@@ -146,8 +156,8 @@ void BookingHistory::loadBookings()
 
 void BookingHistory::filterBookingsByDateRange()
 {
-    const QDate fromDate = ui->dateFromFilter->date();
-    const QDate toDate = ui->dateToFilter->date();
+    filterFromDate = ui->dateFromFilter->date();
+    filterToDate = ui->dateToFilter->date();
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
         QTableWidgetItem *departureItem = ui->tableWidget->item(row, 2);
         if (!departureItem) {
@@ -155,7 +165,7 @@ void BookingHistory::filterBookingsByDateRange()
             continue;
         }
         const QDateTime departureDT = QDateTime::fromString(departureItem->text(), "yyyy-MM-dd HH:mm:ss");
-        const bool matches = departureDT.isValid() && departureDT.date() >= fromDate && departureDT.date() <= toDate;
+        const bool matches = departureDT.isValid() && departureDT.date() >= filterFromDate && departureDT.date() <= filterToDate;
         ui->tableWidget->setRowHidden(row, !matches);
     }
 }
@@ -177,10 +187,10 @@ void BookingHistory::setSearchMode(SearchMode mode)
 void BookingHistory::applyActiveFilter()
 {
     if (currentSearchMode == SearchMode::Route) {
-        const QString text = ui->routeSearchBar->text();
+        filterText = ui->routeSearchBar->text();
         for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
             QTableWidgetItem *routeItem = ui->tableWidget->item(row, 1);
-            const bool matches = routeItem && routeItem->text().contains(text, Qt::CaseInsensitive);
+            const bool matches = routeItem && routeItem->text().contains(filterText, Qt::CaseInsensitive);
             ui->tableWidget->setRowHidden(row, !matches);
         }
         return;
@@ -196,48 +206,57 @@ void BookingHistory::clearBookingFilter()
     }
 }
 
-void BookingHistory::editBooking(int bookingId, int busID, int currentSeats)
+void BookingHistory::editBooking()
 {
     QSqlQuery checkQuery;
     checkQuery.prepare("SELECT availableSeats FROM buses WHERE busID = :busID");
-    checkQuery.bindValue(":busID", busID);
+    checkQuery.bindValue(":busID", editBusID);
     if (!checkQuery.exec() || !checkQuery.next()) {
         QMessageBox::critical(this, "Edit Booking", "Could not find this bus. Please refresh.");
         return;
     }
 
-    const int availableSeats = checkQuery.value(0).toInt();
-    const int maxSeats = availableSeats + currentSeats;
+    editAvailableSeats = checkQuery.value(0).toInt();
+    editMaxSeats = editAvailableSeats + editCurrentSeats;
 
-    bool ok = false;
-    int newSeats = QInputDialog::getInt(
+    editOk = false;
+    editNewSeats = QInputDialog::getInt(
         this,
         "Edit Booking",
         QString("How many seats would you like booked? (currently %1, %2 available to change to)")
-            .arg(currentSeats)
-            .arg(maxSeats),
-        currentSeats,
+            .arg(editCurrentSeats)
+            .arg(editMaxSeats),
+        editCurrentSeats,
         0,
-        maxSeats,
+        editMaxSeats,
         1,
-        &ok
+        &editOk
         );
 
-    if (!ok || newSeats == currentSeats) {
+    if (!editOk || editNewSeats < 0 || editNewSeats == editCurrentSeats) {
         return;
     }
 
-    if (newSeats == 0) {
+    QSqlDatabase db = QSqlDatabase::database();
+
+    if (editNewSeats == 0) {
         if (QMessageBox::question(this, "Cancel Booking",
                                   "Setting this to 0 will cancel the booking entirely. Continue?")
             != QMessageBox::Yes) {
             return;
         }
 
+        if (!db.transaction()) {
+            QMessageBox::critical(this, "Edit Booking", "Failed to cancel booking. Please try again.");
+            qDebug() << "editBooking transaction start error:" << db.lastError().text();
+            return;
+        }
+
         QSqlQuery deleteQuery;
         deleteQuery.prepare("DELETE FROM bookings WHERE id = :id");
-        deleteQuery.bindValue(":id", bookingId);
+        deleteQuery.bindValue(":id", editBookingId);
         if (!deleteQuery.exec()) {
+            db.rollback();
             QMessageBox::critical(this, "Edit Booking", "Failed to cancel booking. Please try again.");
             qDebug() << "editBooking delete error:" << deleteQuery.lastError().text();
             return;
@@ -245,42 +264,75 @@ void BookingHistory::editBooking(int bookingId, int busID, int currentSeats)
 
         QSqlQuery updateBusQuery;
         updateBusQuery.prepare("UPDATE buses SET availableSeats = availableSeats + :seats WHERE busID = :busID");
-        updateBusQuery.bindValue(":seats", currentSeats);
-        updateBusQuery.bindValue(":busID", busID);
-        updateBusQuery.exec();
+        updateBusQuery.bindValue(":seats", editCurrentSeats);
+        updateBusQuery.bindValue(":busID", editBusID);
+        if (!updateBusQuery.exec()) {
+            db.rollback();
+            QMessageBox::critical(this, "Edit Booking", "Failed to cancel booking. Please try again.");
+            qDebug() << "editBooking cancel-refund error:" << updateBusQuery.lastError().text();
+            return;
+        }
+
+        if (!db.commit()) {
+            db.rollback();
+            QMessageBox::critical(this, "Edit Booking", "Failed to cancel booking. Please try again.");
+            qDebug() << "editBooking commit error:" << db.lastError().text();
+            return;
+        }
 
         QMessageBox::information(this, "Cancel Booking", "Booking cancelled.");
         loadBookings();
         return;
     }
 
-    const int delta = newSeats - currentSeats;
+    editDelta = editNewSeats - editCurrentSeats;
+
+    if (!db.transaction()) {
+        QMessageBox::critical(this, "Edit Booking", "Failed to update booking. Please try again.");
+        qDebug() << "editBooking transaction start error:" << db.lastError().text();
+        return;
+    }
 
     QSqlQuery updateBookingQuery;
     updateBookingQuery.prepare("UPDATE bookings SET seatsBooked = :seats WHERE id = :id");
-    updateBookingQuery.bindValue(":seats", newSeats);
-    updateBookingQuery.bindValue(":id", bookingId);
+    updateBookingQuery.bindValue(":seats", editNewSeats);
+    updateBookingQuery.bindValue(":id", editBookingId);
     if (!updateBookingQuery.exec()) {
+        db.rollback();
         QMessageBox::critical(this, "Edit Booking", "Failed to update booking. Please try again.");
         qDebug() << "editBooking update error:" << updateBookingQuery.lastError().text();
         return;
     }
 
     QSqlQuery updateBusQuery;
-    updateBusQuery.prepare("UPDATE buses SET availableSeats = availableSeats - :delta WHERE busID = :busID");
-    updateBusQuery.bindValue(":delta", delta);
-    updateBusQuery.bindValue(":busID", busID);
-    updateBusQuery.exec();
+    updateBusQuery.prepare("UPDATE buses SET availableSeats = availableSeats - :delta "
+                          "WHERE busID = :busID AND availableSeats >= :delta");
+    updateBusQuery.bindValue(":delta", editDelta);
+    updateBusQuery.bindValue(":busID", editBusID);
+
+    if (!updateBusQuery.exec() || updateBusQuery.numRowsAffected() < 1) {
+        db.rollback();
+        QMessageBox::critical(this, "Edit Booking", "Not enough seats remaining on this bus. Please try again.");
+        qDebug() << "editBooking seat-decrement error:" << updateBusQuery.lastError().text();
+        loadBookings();
+        return;
+    }
+
+    if (!db.commit()) {
+        db.rollback();
+        QMessageBox::critical(this, "Edit Booking", "Failed to update booking. Please try again.");
+        qDebug() << "editBooking commit error:" << db.lastError().text();
+        return;
+    }
 
     QMessageBox::information(this, "Edit Booking", "Booking updated.");
     loadBookings();
 }
 
-void BookingHistory::downloadTicket(int bookingId, const QString &busName, const QString &route,
-                                    const QString &departureTime, double price, int seatsBooked)
+void BookingHistory::downloadTicket()
 {
     const QString defaultDir = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-    const QString defaultName = QString("BusPass_Ticket_%1.pdf").arg(bookingId);
+    const QString defaultName = QString("BusPass_Ticket_%1.pdf").arg(ticketBookingId);
     const QString filePath = QFileDialog::getSaveFileName(
         this, "Save Ticket", defaultDir + "/" + defaultName, "PDF Files (*.pdf)");
 
@@ -298,7 +350,7 @@ void BookingHistory::downloadTicket(int bookingId, const QString &busName, const
     int y = margin;
 
     const QString passengerDisplay = currentName.isEmpty() ? currentUsername : currentName;
-    const double totalPrice = price * seatsBooked;
+    const double totalPrice = ticketPrice * ticketSeatsBooked;
 
     painter.setFont(QFont("Segoe UI", 16, QFont::Bold));
     painter.drawText(margin, y, "BusPass - E-Ticket");
@@ -306,13 +358,13 @@ void BookingHistory::downloadTicket(int bookingId, const QString &busName, const
 
     painter.setFont(QFont("Segoe UI", 10));
     const QStringList lines = {
-        QString("Booking ID: %1").arg(bookingId),
+        QString("Booking ID: %1").arg(ticketBookingId),
         QString("Passenger: %1").arg(passengerDisplay),
-        QString("Bus Name: %1").arg(busName),
-        QString("Route: %1").arg(route),
-        QString("Departure Time: %1").arg(departureTime),
-        QString("Seats Booked: %1").arg(seatsBooked),
-        QString("Price per Seat: Rs. %1").arg(price, 0, 'f', 2),
+        QString("Bus Name: %1").arg(ticketBusName),
+        QString("Route: %1").arg(ticketRoute),
+        QString("Departure Time: %1").arg(ticketDepartureTime),
+        QString("Seats Booked: %1").arg(ticketSeatsBooked),
+        QString("Price per Seat: Rs. %1").arg(ticketPrice, 0, 'f', 2),
         QString("Total Price: Rs. %1").arg(totalPrice, 0, 'f', 2),
     };
 

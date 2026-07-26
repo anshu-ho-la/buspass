@@ -2,6 +2,7 @@
 #define ADMINHISTORY_H
 
 #include <QDialog>
+#include <QDate>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Dialog; }
@@ -21,6 +22,16 @@ private:
 
     enum class SearchMode { Date, Route };
     SearchMode currentSearchMode = SearchMode::Date;
+
+    QString rowPassenger;
+    QString rowBusName;
+    QString rowRoute;
+    QString rowDepartureTime;
+    double rowPrice;
+    int rowSeatsBooked;
+    QString filterText;
+    QDate filterFromDate;
+    QDate filterToDate;
 
     void loadbookings();
     void setSearchMode(SearchMode mode);

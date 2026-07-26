@@ -83,22 +83,22 @@ void bookings::loadbookings()
     }
 
     while (query.next()) {
-        const QString passenger     = query.value(0).toString();
-        const QString busName       = query.value(1).toString();
-        const QString route         = query.value(2).toString();
-        const QString departureTime = query.value(3).toString();
-        const double price          = query.value(4).toDouble();
-        const int seatsBooked       = query.value(5).toInt();
+        rowPassenger     = query.value(0).toString();
+        rowBusName       = query.value(1).toString();
+        rowRoute         = query.value(2).toString();
+        rowDepartureTime = query.value(3).toString();
+        rowPrice         = query.value(4).toDouble();
+        rowSeatsBooked   = query.value(5).toInt();
 
         int row = ui->tableWidget->rowCount();
         ui->tableWidget->insertRow(row);
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(passenger));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(busName));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(route));
-        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(departureTime));
-        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(price, 'f', 2)));
-        ui->tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(seatsBooked)));
-        ui->tableWidget->setItem(row, 6, new QTableWidgetItem(QString::number(price * seatsBooked, 'f', 2)));
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(rowPassenger));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(rowBusName));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(rowRoute));
+        ui->tableWidget->setItem(row, 3, new QTableWidgetItem(rowDepartureTime));
+        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(QString::number(rowPrice, 'f', 2)));
+        ui->tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(rowSeatsBooked)));
+        ui->tableWidget->setItem(row, 6, new QTableWidgetItem(QString::number(rowPrice * rowSeatsBooked, 'f', 2)));
     }
 
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -122,17 +122,17 @@ void bookings::setSearchMode(SearchMode mode)
 void bookings::applyActiveFilter()
 {
     if (currentSearchMode == SearchMode::Route) {
-        const QString text = ui->searchBar->text();
+        filterText = ui->searchBar->text();
         for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
             QTableWidgetItem *routeItem = ui->tableWidget->item(row, 2);
-            const bool matches = routeItem && routeItem->text().contains(text, Qt::CaseInsensitive);
+            const bool matches = routeItem && routeItem->text().contains(filterText, Qt::CaseInsensitive);
             ui->tableWidget->setRowHidden(row, !matches);
         }
         return;
     }
 
-    const QDate fromDate = ui->dateFromFilter->date();
-    const QDate toDate = ui->dateToFilter->date();
+    filterFromDate = ui->dateFromFilter->date();
+    filterToDate = ui->dateToFilter->date();
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
         QTableWidgetItem *departureItem = ui->tableWidget->item(row, 3);
         if (!departureItem) {
@@ -140,7 +140,7 @@ void bookings::applyActiveFilter()
             continue;
         }
         const QDateTime departureDT = QDateTime::fromString(departureItem->text(), "yyyy-MM-dd HH:mm:ss");
-        const bool matches = departureDT.isValid() && departureDT.date() >= fromDate && departureDT.date() <= toDate;
+        const bool matches = departureDT.isValid() && departureDT.date() >= filterFromDate && departureDT.date() <= filterToDate;
         ui->tableWidget->setRowHidden(row, !matches);
     }
 }

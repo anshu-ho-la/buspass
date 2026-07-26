@@ -23,6 +23,17 @@ private slots:
 
 private:
     Ui::add *ui;
+
+    QString busName;
+    QString route;
+    QString seats;
+    QString available;
+    QString departure;
+    QString price;
+    bool seatsOk;
+    int seatsValue;
+    bool priceOk;
+    double priceValue;
 };
 
 #endif

@@ -60,19 +60,19 @@ void adminusers::loadUsers()
     }
 
     while (query.next()) {
-        const QString username = query.value(0).toString();
-        const QString name     = query.value(1).toString();
-        const QString email    = query.value(2).toString();
-        const bool isAdmin     = query.value(3).toInt() != 0;
+        rowUsername = query.value(0).toString();
+        rowName     = query.value(1).toString();
+        rowEmail    = query.value(2).toString();
+        rowIsAdmin  = query.value(3).toInt() != 0;
 
         int row = ui->tableWidget->rowCount();
         ui->tableWidget->insertRow(row);
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(username));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(name));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(email.isEmpty() ? "-" : email));
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(rowUsername));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(rowName));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(rowEmail.isEmpty() ? "-" : rowEmail));
 
-        QTableWidgetItem *roleItem = new QTableWidgetItem(isAdmin ? "Admin" : "Passenger");
-        if (isAdmin) {
+        QTableWidgetItem *roleItem = new QTableWidgetItem(rowIsAdmin ? "Admin" : "Passenger");
+        if (rowIsAdmin) {
             roleItem->setBackground(QColor("#cfe3dc"));
             roleItem->setForeground(QColor("#16324a"));
         } else {
@@ -89,9 +89,9 @@ void adminusers::loadUsers()
 void adminusers::filterUsers(const QString &text)
 {
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
-        const QString username = ui->tableWidget->item(row, 0) ? ui->tableWidget->item(row, 0)->text() : "";
-        const QString name     = ui->tableWidget->item(row, 1) ? ui->tableWidget->item(row, 1)->text() : "";
-        const bool matches = username.contains(text, Qt::CaseInsensitive) || name.contains(text, Qt::CaseInsensitive);
+        filterRowUsername = ui->tableWidget->item(row, 0) ? ui->tableWidget->item(row, 0)->text() : "";
+        filterRowName     = ui->tableWidget->item(row, 1) ? ui->tableWidget->item(row, 1)->text() : "";
+        const bool matches = filterRowUsername.contains(text, Qt::CaseInsensitive) || filterRowName.contains(text, Qt::CaseInsensitive);
         ui->tableWidget->setRowHidden(row, !matches);
     }
 }

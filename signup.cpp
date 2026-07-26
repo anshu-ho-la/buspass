@@ -3,6 +3,7 @@
 #include "ui_signup.h"
 #include "passwordutil.h"
 #include <qregularexpression.h>
+#include <QDebug>
 signup::signup(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::signup)
@@ -20,10 +21,10 @@ signup::signup(QWidget *parent)
 
 void signup::on_signup_button_clicked()
 {
-    QString name = ui->name->text().trimmed();
-    QString password = ui->password->text().trimmed();
-    QString username = ui->username->text().trimmed();
-    QString email = ui->email->text().trimmed();
+    name = ui->name->text().trimmed();
+    password = ui->password->text().trimmed();
+    username = ui->username->text().trimmed();
+    email = ui->email->text().trimmed();
 
     QRegularExpression rx("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
 
@@ -37,12 +38,12 @@ void signup::on_signup_button_clicked()
         return;
     }
 
-        if (checkUsername(username)) {
+        if (checkUsername()) {
         QMessageBox::critical(this, "Failed", "Invalid username already taken. Try again.");
 
         return;
         }
-            else if (checkEmail(email)) {
+            else if (checkEmail()) {
                 QMessageBox::critical(this, "Failed", "Invalid email already in use.");
 
                 return;
@@ -51,15 +52,20 @@ void signup::on_signup_button_clicked()
                 QMessageBox::critical(this, "Failed", "Invalid email format.");
             }
             else{
-                QMessageBox::information(this, "Success", "Signup successful!");
-
                 QSqlQuery query;
                 query.prepare("INSERT INTO user (username, password, name, email, isAdmin) VALUES (:username, :password, :name, :email, 0)");
                 query.bindValue(":username", username);
                 query.bindValue(":password", PasswordUtil::hash(password));
                 query.bindValue(":name", name);
                 query.bindValue(":email", email);
-                query.exec();
+
+                if (!query.exec()) {
+                    QMessageBox::critical(this, "Failed", "Failed to create account. Please try again.");
+                    qDebug() << "signup insert error:" << query.lastError().text();
+                    return;
+                }
+
+                QMessageBox::information(this, "Success", "Signup successful!");
 
                 {
                 login *s = new login();
@@ -75,7 +81,7 @@ void signup::on_signup_button_clicked()
 
 }
 
-bool signup::checkUsername(QString username)
+bool signup::checkUsername()
 {
     QSqlQuery query;
 
@@ -84,16 +90,16 @@ bool signup::checkUsername(QString username)
 
     query.exec();
 
-    int n=0;
+    matchCount = 0;
 
     if (query.next()) {
-        n=1;
+        matchCount = 1;
     }
 
-    return n;
+    return matchCount;
 }
 
-bool signup::checkEmail(QString email)
+bool signup::checkEmail()
 {
     QSqlQuery query;
 
@@ -102,13 +108,13 @@ bool signup::checkEmail(QString email)
 
     query.exec();
 
-    int n=0;
+    matchCount = 0;
 
     if (query.next()) {
-        n=1;
+        matchCount = 1;
     }
 
-    return n;
+    return matchCount;
 }
 
 void signup::on_login_button_clicked()

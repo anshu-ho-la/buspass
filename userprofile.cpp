@@ -40,7 +40,7 @@ userprofile::userprofile(QWidget *parent) :
                   [this]() { openPage<login>(this); }
               });
 
-    int loggedInId = Session::instance().id();
+    loggedInId = Session::instance().id();
     if (loggedInId != -1) {
         QSqlQuery query;
         query.prepare("SELECT username FROM user WHERE id = :id");
@@ -109,7 +109,7 @@ void userprofile::onChangeUsernameClicked()
         return;
     }
 
-    QString newusername = newUsernameEdit->text().trimmed();
+    newusername = newUsernameEdit->text().trimmed();
 
     if (newusername.isEmpty()) {
         QMessageBox::warning(this, "Update Username", "Username field cannot be empty.");
@@ -169,18 +169,22 @@ void userprofile::onChangePasswordClicked()
         return;
     }
 
-    QString currentpassword = currentEdit->text();
-    QString newpassword     = newEdit->text();
+    currentpassword = currentEdit->text();
+    newpassword     = newEdit->text();
 
     if (currentpassword.isEmpty() || newpassword.isEmpty()) {
         QMessageBox::warning(this, "Update Password", "All password fields must be filled.");
+        return;
+    }
+    if (newpassword.length() < 6) {
+        QMessageBox::warning(this, "Update Password", "New password must be at least 6 characters long.");
         return;
     }
     if (newpassword == currentpassword) {
         QMessageBox::information(this, "Update Password", "New password must differ from current password.");
         return;
     }
-    if (!verifyCurrentPassword(currentpassword)) {
+    if (!verifyCurrentPassword()) {
         QMessageBox::critical(this, "Update Password", "Current password is incorrect.");
         return;
     }
@@ -199,14 +203,14 @@ void userprofile::onChangePasswordClicked()
     }
 }
 
-bool userprofile::verifyCurrentPassword(QString enteredPassword)
+bool userprofile::verifyCurrentPassword()
 {
     QSqlQuery query;
     query.prepare("SELECT password FROM user WHERE username = :username");
     query.bindValue(":username", currentusername);
 
     if (query.exec() && query.next()) {
-        return query.value(0).toString() == PasswordUtil::hash(enteredPassword);
+        return query.value(0).toString() == PasswordUtil::hash(currentpassword);
     }
     return false;
 }

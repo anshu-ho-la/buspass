@@ -8,6 +8,7 @@
 #include "adminusers.h"
 #include "pageswitch.h"
 #include <QtSql/QSqlQuery>
+#include <QtSql/QSqlDatabase>
 #include <QSqlError>
 #include <QMessageBox>
 #include <QPushButton>
@@ -79,17 +80,24 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::handleBusAddition(QString busName, QString route, QString seats, QString available, QString departure, QString price)
 {
+    newBusName = busName;
+    newRoute = route;
+    newSeats = seats;
+    newAvailable = available;
+    newDeparture = departure;
+    newPrice = price;
+
     QSqlQuery insertQuery;
     insertQuery.prepare(
         "INSERT INTO buses (busName, route, totalSeats, availableSeats, departureTime, price) "
         "VALUES (:busName, :route, :totalSeats, :availableSeats, :departureTime, :price)"
         );
-    insertQuery.bindValue(":busName", busName);
-    insertQuery.bindValue(":route", route);
-    insertQuery.bindValue(":totalSeats", seats.toInt());
-    insertQuery.bindValue(":availableSeats", available.toInt());
-    insertQuery.bindValue(":departureTime", departure);
-    insertQuery.bindValue(":price", price.toDouble());
+    insertQuery.bindValue(":busName", newBusName);
+    insertQuery.bindValue(":route", newRoute);
+    insertQuery.bindValue(":totalSeats", newSeats.toInt());
+    insertQuery.bindValue(":availableSeats", newAvailable.toInt());
+    insertQuery.bindValue(":departureTime", newDeparture);
+    insertQuery.bindValue(":price", newPrice.toDouble());
 
     if (!insertQuery.exec()) {
         QMessageBox::critical(this, "Add Bus", "Failed to save the new bus. Please try again.");
@@ -121,26 +129,26 @@ void MainWindow::loadBuses()
     const QDateTime now = QDateTime::currentDateTime();
 
     while (query.next()) {
-        int busID              = query.value(0).toInt();
-        QString busName        = query.value(1).toString();
-        QString route           = query.value(2).toString();
-        QString totalSeats      = query.value(3).toString();
-        QString availableSeats  = query.value(4).toString();
-        QString departureTime   = query.value(5).toString();
-        double price            = query.value(6).toDouble();
+        rowBusID              = query.value(0).toInt();
+        rowBusName        = query.value(1).toString();
+        rowRoute           = query.value(2).toString();
+        rowTotalSeats      = query.value(3).toString();
+        rowAvailableSeats  = query.value(4).toString();
+        rowDepartureTime   = query.value(5).toString();
+        rowPrice            = query.value(6).toDouble();
 
-        const QDateTime departureDT = QDateTime::fromString(departureTime, "yyyy-MM-dd HH:mm:ss");
+        const QDateTime departureDT = QDateTime::fromString(rowDepartureTime, "yyyy-MM-dd HH:mm:ss");
         const bool alreadyDeparted = departureDT.isValid() && departureDT <= now;
 
         int row = ui->tableWidget->rowCount();
         ui->tableWidget->insertRow(row);
-        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(busName));
-        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(route));
-        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(totalSeats));
+        ui->tableWidget->setItem(row, 0, new QTableWidgetItem(rowBusName));
+        ui->tableWidget->setItem(row, 1, new QTableWidgetItem(rowRoute));
+        ui->tableWidget->setItem(row, 2, new QTableWidgetItem(rowTotalSeats));
 
-        QTableWidgetItem *availableItem = new QTableWidgetItem(availableSeats);
-        const int totalSeatsValue = totalSeats.toInt();
-        const int availableSeatsValue = availableSeats.toInt();
+        QTableWidgetItem *availableItem = new QTableWidgetItem(rowAvailableSeats);
+        const int totalSeatsValue = rowTotalSeats.toInt();
+        const int availableSeatsValue = rowAvailableSeats.toInt();
         if (availableSeatsValue <= 0) {
             availableItem->setBackground(QColor("#f8d7da"));
             availableItem->setForeground(QColor("#7a1c1c"));
@@ -153,8 +161,8 @@ void MainWindow::loadBuses()
         }
         ui->tableWidget->setItem(row, 3, availableItem);
 
-        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(departureTime));
-        ui->tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(price, 'f', 2)));
+        ui->tableWidget->setItem(row, 4, new QTableWidgetItem(rowDepartureTime));
+        ui->tableWidget->setItem(row, 5, new QTableWidgetItem(QString::number(rowPrice, 'f', 2)));
 
         QPushButton *deleteBtn = new QPushButton(alreadyDeparted ? "Departed" : "Delete", ui->tableWidget);
         deleteBtn->setEnabled(!alreadyDeparted);
@@ -162,7 +170,7 @@ void MainWindow::loadBuses()
         if (!alreadyDeparted) {
             deleteBtn->setProperty("danger", true);
         }
-        connect(deleteBtn, &QPushButton::clicked, this, [this, busID]() {
+        connect(deleteBtn, &QPushButton::clicked, this, [this, busID = rowBusID]() {
             deleteBus(busID);
         });
         ui->tableWidget->setCellWidget(row, 6, deleteBtn);
@@ -189,17 +197,17 @@ void MainWindow::setSearchMode(SearchMode mode)
 void MainWindow::applyActiveFilter()
 {
     if (currentSearchMode == SearchMode::Route) {
-        const QString text = ui->routeSearchBar->text();
+        filterText = ui->routeSearchBar->text();
         for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
             QTableWidgetItem *routeItem = ui->tableWidget->item(row, 1);
-            const bool matches = routeItem && routeItem->text().contains(text, Qt::CaseInsensitive);
+            const bool matches = routeItem && routeItem->text().contains(filterText, Qt::CaseInsensitive);
             ui->tableWidget->setRowHidden(row, !matches);
         }
         return;
     }
 
-    const QDate fromDate = ui->dateFromFilter->date();
-    const QDate toDate = ui->dateToFilter->date();
+    filterFromDate = ui->dateFromFilter->date();
+    filterToDate = ui->dateToFilter->date();
     for (int row = 0; row < ui->tableWidget->rowCount(); ++row) {
         QTableWidgetItem *departureItem = ui->tableWidget->item(row, 4);
         if (!departureItem) {
@@ -207,7 +215,7 @@ void MainWindow::applyActiveFilter()
             continue;
         }
         const QDateTime departureDT = QDateTime::fromString(departureItem->text(), "yyyy-MM-dd HH:mm:ss");
-        const bool matches = departureDT.isValid() && departureDT.date() >= fromDate && departureDT.date() <= toDate;
+        const bool matches = departureDT.isValid() && departureDT.date() >= filterFromDate && departureDT.date() <= filterToDate;
         ui->tableWidget->setRowHidden(row, !matches);
     }
 }
@@ -221,9 +229,40 @@ void MainWindow::clearBusFilter()
 
 void MainWindow::deleteBus(int busID)
 {
-    if (QMessageBox::question(this, "Delete Bus",
-                              "Are you sure you want to delete this bus?")
-        != QMessageBox::Yes) {
+    QSqlQuery bookingCountQuery;
+    bookingCountQuery.prepare("SELECT COUNT(*) FROM bookings WHERE busID = :busID");
+    bookingCountQuery.bindValue(":busID", busID);
+
+    const bool hasBookings = bookingCountQuery.exec() && bookingCountQuery.next() && bookingCountQuery.value(0).toInt() > 0;
+
+    if (hasBookings) {
+        if (QMessageBox::question(this, "Delete Bus",
+                "There are already bookings for this bus. Deleting it will also delete those bookings. "
+                "Are you sure you want to continue?")
+            != QMessageBox::Yes) {
+            return;
+        }
+    } else {
+        if (QMessageBox::question(this, "Delete Bus", "Are you sure you want to delete this bus?")
+            != QMessageBox::Yes) {
+            return;
+        }
+    }
+
+    QSqlDatabase db = QSqlDatabase::database();
+    if (!db.transaction()) {
+        QMessageBox::critical(this, "Delete Bus", "Failed to delete this bus. Please try again.");
+        qDebug() << "deleteBus transaction start error:" << db.lastError().text();
+        return;
+    }
+
+    QSqlQuery deleteBookingsQuery;
+    deleteBookingsQuery.prepare("DELETE FROM bookings WHERE busID = :busID");
+    deleteBookingsQuery.bindValue(":busID", busID);
+    if (!deleteBookingsQuery.exec()) {
+        db.rollback();
+        QMessageBox::critical(this, "Delete Bus", "Failed to delete this bus. Please try again.");
+        qDebug() << "deleteBus bookings-cleanup error:" << deleteBookingsQuery.lastError().text();
         return;
     }
 
@@ -232,8 +271,16 @@ void MainWindow::deleteBus(int busID)
     deleteQuery.bindValue(":busID", busID);
 
     if (!deleteQuery.exec()) {
+        db.rollback();
         QMessageBox::critical(this, "Delete Bus", "Failed to delete this bus. Please try again.");
         qDebug() << "deleteBus error:" << deleteQuery.lastError().text();
+        return;
+    }
+
+    if (!db.commit()) {
+        db.rollback();
+        QMessageBox::critical(this, "Delete Bus", "Failed to delete this bus. Please try again.");
+        qDebug() << "deleteBus commit error:" << db.lastError().text();
         return;
     }
 

@@ -31,9 +31,15 @@ private:
     QString currentusername;
     QString currentName;
     QString currentEmail;
+    int loggedInId;
+    QString newusername;
+    QString currentpassword;
+    QString newpassword;
+    QString newAdminUsername;
+    QString newAdminPassword;
 
     void adminInfo();
-    bool verifyCurrentPassword(QString password);
+    bool verifyCurrentPassword();
 
 };
 

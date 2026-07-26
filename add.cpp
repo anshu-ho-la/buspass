@@ -21,12 +21,12 @@ add::~add()
 
 void add::on_pushButton_clicked()
 {
-    QString busName = ui->txtRoute_2->text().trimmed();
-    QString route = ui->txtRoute->text().trimmed();
-    QString seats = ui->txtSeats->text().trimmed();
-    QString available = ui->txtSeats->text().trimmed();
-    QString departure = ui->dateTimeDep->dateTime().toString("yyyy-MM-dd HH:mm:ss");
-    QString price = ui->lineEdit_6->text().trimmed();
+    busName = ui->txtRoute_2->text().trimmed();
+    route = ui->txtRoute->text().trimmed();
+    seats = ui->txtSeats->text().trimmed();
+    available = ui->txtSeats->text().trimmed();
+    departure = ui->dateTimeDep->dateTime().toString("yyyy-MM-dd HH:mm:ss");
+    price = ui->lineEdit_6->text().trimmed();
 
 
     if(busName.isEmpty() || route.isEmpty() || seats.isEmpty() || available.isEmpty() || price.isEmpty()) {
@@ -34,15 +34,15 @@ void add::on_pushButton_clicked()
         return;
     }
 
-    bool seatsOk = false;
-    int seatsValue = seats.toInt(&seatsOk);
+    seatsOk = false;
+    seatsValue = seats.toInt(&seatsOk);
     if (!seatsOk || seatsValue <= 0) {
         QMessageBox::warning(this, "Invalid Seats", "Total seats must be a whole number greater than 0.");
         return;
     }
 
-    bool priceOk = false;
-    double priceValue = price.toDouble(&priceOk);
+    priceOk = false;
+    priceValue = price.toDouble(&priceOk);
     if (!priceOk || priceValue <= 0) {
         QMessageBox::warning(this, "Invalid Price", "Price must be a number greater than 0.");
         return;

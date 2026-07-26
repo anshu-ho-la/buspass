@@ -2,6 +2,7 @@
 #define USERMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDate>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowUserForm; }
@@ -20,9 +21,32 @@ private:
     enum class SearchMode { Date, Route };
     SearchMode currentSearchMode = SearchMode::Date;
 
+    int rowBusID;
+    QString rowBusName;
+    QString rowRoute;
+    int rowTotalSeats;
+    int rowAvailableSeats;
+    QString rowDepartureTime;
+    double rowPrice;
+
+    QString filterText;
+    QDate filterFromDate;
+    QDate filterToDate;
+
+    int bookBusID;
+    QString bookBusName;
+    QString bookRoute;
+    QString bookDepartureTime;
+    double bookPrice;
+    int loggedInId;
+    int availableSeatsForBus;
+    bool seatCountOk;
+    int numSeats;
+    int existingBookingId;
+    int existingBookingSeats;
+
     void loadBuses();
-    void bookSeat(int busID, const QString &busName, const QString &route,
-                  const QString &departureTime, double price);
+    void bookSeat();
     void setSearchMode(SearchMode mode);
     void applyActiveFilter();
     void clearBusFilter();

@@ -20,7 +20,7 @@ login::login(QWidget *parent)
     connect(ui->password, &QLineEdit::returnPressed, ui->login_button, &QPushButton::click);
 }
 
-bool login::checkCredentials(QString username, QString password)
+bool login::checkCredentials()
 {
     QSqlQuery query;
 
@@ -30,13 +30,12 @@ bool login::checkCredentials(QString username, QString password)
     query.exec();
 
     if (query.next()) {
-        int id = query.value(0).toInt();
-        Session::instance().login(id);
-
-        int isadmin = query.value(5).toInt();
+        id = query.value(0).toInt();
+        isadmin = query.value(5).toInt();
 
 
         if (isadmin==0){
+        Session::instance().login(id);
         MainWindowUser *d = new MainWindowUser();
         if (this->isMaximized()) {
             d->showMaximized();
@@ -48,6 +47,7 @@ bool login::checkCredentials(QString username, QString password)
         return true;
         }
         else if (isadmin==1){
+        Session::instance().login(id);
         MainWindow *d = new MainWindow();
         if (this->isMaximized()) {
             d->showMaximized();
@@ -65,15 +65,15 @@ bool login::checkCredentials(QString username, QString password)
 
 void login::on_login_button_clicked()
 {
-    QString username = ui->username->text().trimmed();
-    QString password = ui->password->text().trimmed();
+    username = ui->username->text().trimmed();
+    password = ui->password->text().trimmed();
 
     if (username.isEmpty() || password.isEmpty()) {
         QMessageBox::warning(this, "Warning", "Please enter both username and password!");
         return;
     }
 
-    if (checkCredentials(username, password)) {
+    if (checkCredentials()) {
         QMessageBox::information(this, "Success", "Login successful! Welcome, " + username + "!");
     } else {
         QMessageBox::critical(this, "Failed", "Invalid username or password. Try again.");

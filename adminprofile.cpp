@@ -19,6 +19,7 @@
 #include <QDialog>
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
+#include <QVariant>
 
 adminprofile::adminprofile(QWidget *parent) :
     QDialog(parent),
@@ -43,7 +44,7 @@ adminprofile::adminprofile(QWidget *parent) :
                   [this]() { openPage<login>(this); }
               });
 
-    int loggedInId = Session::instance().id();
+    loggedInId = Session::instance().id();
     if (loggedInId != -1) {
         QSqlQuery query;
         query.prepare("SELECT username FROM user WHERE id = :id");
@@ -113,7 +114,7 @@ void adminprofile::onChangeUsernameClicked()
         return;
     }
 
-    QString newusername = newUsernameEdit->text().trimmed();
+    newusername = newUsernameEdit->text().trimmed();
 
     if (newusername.isEmpty()) {
         QMessageBox::warning(this, "Update Username", "Username field cannot be empty.");
@@ -173,18 +174,22 @@ void adminprofile::onChangePasswordClicked()
         return;
     }
 
-    QString currentpassword = currentEdit->text();
-    QString newpassword     = newEdit->text();
+    currentpassword = currentEdit->text();
+    newpassword     = newEdit->text();
 
     if (currentpassword.isEmpty() || newpassword.isEmpty()) {
         QMessageBox::warning(this, "Update Password", "All password fields must be filled.");
+        return;
+    }
+    if (newpassword.length() < 6) {
+        QMessageBox::warning(this, "Update Password", "New password must be at least 6 characters long.");
         return;
     }
     if (newpassword == currentpassword) {
         QMessageBox::information(this, "Update Password", "New password must differ from current password.");
         return;
     }
-    if (!verifyCurrentPassword(currentpassword)) {
+    if (!verifyCurrentPassword()) {
         QMessageBox::critical(this, "Update Password", "Current password is incorrect.");
         return;
     }
@@ -203,14 +208,14 @@ void adminprofile::onChangePasswordClicked()
     }
 }
 
-bool adminprofile::verifyCurrentPassword(QString enteredPassword)
+bool adminprofile::verifyCurrentPassword()
 {
     QSqlQuery query;
     query.prepare("SELECT password FROM user WHERE username = :username");
     query.bindValue(":username", currentusername);
 
     if (query.exec() && query.next()) {
-        return query.value(0).toString() == PasswordUtil::hash(enteredPassword);
+        return query.value(0).toString() == PasswordUtil::hash(currentpassword);
     }
     return false;
 }
@@ -247,26 +252,30 @@ void adminprofile::onCreateAdminClicked()
         return;
     }
 
-    QString username = userEdit->text().trimmed();
-    QString password = passEdit->text();
+    newAdminUsername = userEdit->text().trimmed();
+    newAdminPassword = passEdit->text();
 
-    if (username.isEmpty() || password.isEmpty()) {
+    if (newAdminUsername.isEmpty() || newAdminPassword.isEmpty()) {
         QMessageBox::warning(this, "Create Admin Account", "All fields are required to create an account.");
+        return;
+    }
+    if (newAdminPassword.length() < 6) {
+        QMessageBox::warning(this, "Create Admin Account", "Password must be at least 6 characters long.");
         return;
     }
 
     QSqlQuery insertQuery;
     insertQuery.prepare("INSERT INTO user (username, password, name, email, isAdmin) VALUES (:username, :password, :name, :email, :isAdmin)");
-    insertQuery.bindValue(":username", username);
-    insertQuery.bindValue(":password", PasswordUtil::hash(password));
-    insertQuery.bindValue(":name",     username);
-    insertQuery.bindValue(":email",    "");
+    insertQuery.bindValue(":username", newAdminUsername);
+    insertQuery.bindValue(":password", PasswordUtil::hash(newAdminPassword));
+    insertQuery.bindValue(":name",     newAdminUsername);
+    insertQuery.bindValue(":email",    QVariant());
     insertQuery.bindValue(":isAdmin",  1);
 
     if (insertQuery.exec()) {
         QMessageBox::information(this, "Create Admin Account",
-                                 "Admin account \"" + username + "\" created successfully.");
-        qDebug() << "New admin created:" << username;
+                                 "Admin account \"" + newAdminUsername + "\" created successfully.");
+        qDebug() << "New admin created:" << newAdminUsername;
     } else {
         QMessageBox::critical(this, "Create Admin Account", "Failed to create admin account. Try again.");
         qDebug() << "Create admin error:" << insertQuery.lastError().text();

@@ -27,8 +27,14 @@ private slots:
 private:
     Ui::signup *ui;
 
-    bool checkUsername(QString username);
-    bool checkEmail(QString email);
+    QString name;
+    QString password;
+    QString username;
+    QString email;
+    int matchCount;
+
+    bool checkUsername();
+    bool checkEmail();
 };
 
 #endif // SIGNUP_H

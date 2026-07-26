@@ -2,6 +2,7 @@
 #define ADMINMAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDate>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindowAdmin; }
@@ -25,6 +26,25 @@ private:
 
     enum class SearchMode { Date, Route };
     SearchMode currentSearchMode = SearchMode::Date;
+
+    QString newBusName;
+    QString newRoute;
+    QString newSeats;
+    QString newAvailable;
+    QString newDeparture;
+    QString newPrice;
+
+    int rowBusID;
+    QString rowBusName;
+    QString rowRoute;
+    QString rowTotalSeats;
+    QString rowAvailableSeats;
+    QString rowDepartureTime;
+    double rowPrice;
+
+    QString filterText;
+    QDate filterFromDate;
+    QDate filterToDate;
 
     void loadBuses();
     void deleteBus(int busID);

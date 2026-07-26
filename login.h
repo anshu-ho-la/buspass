@@ -28,6 +28,11 @@ private slots:
 private:
     Ui::login *ui;
 
-    bool checkCredentials(QString username, QString password);
+    QString username;
+    QString password;
+    int id;
+    int isadmin;
+
+    bool checkCredentials();
 };
 #endif // LOGIN_H

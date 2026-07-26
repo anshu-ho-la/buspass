@@ -18,6 +18,13 @@ public:
 private:
     Ui::adminusers *ui;
 
+    QString rowUsername;
+    QString rowName;
+    QString rowEmail;
+    bool rowIsAdmin;
+    QString filterRowUsername;
+    QString filterRowName;
+
     void loadUsers();   // pulls every registered user (passenger and admin) from the database
     void filterUsers(const QString &text);
 };
