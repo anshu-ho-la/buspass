@@ -25,7 +25,7 @@ private:
     QString filterRowUsername;
     QString filterRowName;
 
-    void loadUsers();   // pulls every registered user (passenger and admin) from the database
+    void loadUsers();
     void filterUsers(const QString &text);
 };
 

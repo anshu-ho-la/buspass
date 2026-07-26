@@ -230,7 +230,6 @@ void MainWindowUser::bookSeat()
     }
 
     if (existingQuery.next()) {
-        // Already have a booking for this bus - add to it instead of creating a duplicate row
         existingBookingId = existingQuery.value(0).toInt();
         existingBookingSeats = existingQuery.value(1).toInt();
 

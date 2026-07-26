@@ -61,8 +61,6 @@ public:
         seedAdmin.bindValue(":password", PasswordUtil::hash("admin123"));
         seedAdmin.exec();
 
-        // MIGRATION: hash any password that predates hashing being introduced.
-        // Safe to run on every launch - already-hashed passwords are left alone.
         QSqlQuery userQuery;
         userQuery.exec("SELECT id, password FROM user");
         QList<QPair<int, QString>> toHash;
