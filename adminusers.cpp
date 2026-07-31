@@ -74,10 +74,6 @@ void adminusers::loadUsers()
         QTableWidgetItem *roleItem = new QTableWidgetItem(rowIsAdmin ? "Admin" : "Passenger");
         if (rowIsAdmin) {
             roleItem->setBackground(QColor("#cfe3dc"));
-            roleItem->setForeground(QColor("#16324a"));
-        } else {
-            roleItem->setBackground(QColor("#f0f5f4"));
-            roleItem->setForeground(QColor("#4a5754"));
         }
         ui->tableWidget->setItem(row, 3, roleItem);
     }

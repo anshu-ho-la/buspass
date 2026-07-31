@@ -93,13 +93,10 @@ void MainWindowUser::loadBuses()
         QTableWidgetItem *availableItem = new QTableWidgetItem(QString::number(rowAvailableSeats));
         if (rowAvailableSeats <= 0) {
             availableItem->setBackground(QColor("#f8d7da"));
-            availableItem->setForeground(QColor("#7a1c1c"));
         } else if (rowTotalSeats > 0 && (double(rowAvailableSeats) / rowTotalSeats) <= 0.5) {
             availableItem->setBackground(QColor("#fff3cd"));
-            availableItem->setForeground(QColor("#7a5c00"));
         } else {
             availableItem->setBackground(QColor("#c8e6c9"));
-            availableItem->setForeground(QColor("#1b5e20"));
         }
         ui->tableWidget->setItem(row, 3, availableItem);
 
@@ -230,6 +227,7 @@ void MainWindowUser::bookSeat()
     }
 
     if (existingQuery.next()) {
+        // Already have a booking for this bus - add to it instead of creating a duplicate row
         existingBookingId = existingQuery.value(0).toInt();
         existingBookingSeats = existingQuery.value(1).toInt();
 

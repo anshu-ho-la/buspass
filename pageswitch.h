@@ -27,9 +27,7 @@ inline void openPage(QWidget *currentWindow)
     currentWindow->close();
 }
 
-inline void addNavBar(QWidget *centralWidget,
-                      const QStringList &labels,
-                      const QList<std::function<void()>> &actions)
+inline void addNavBar(QWidget *centralWidget,const QStringList &labels,const QList<std::function<void()>> &actions)
 {
     QLayout *existingLayout = centralWidget->layout();
     if (!existingLayout) return;
@@ -44,11 +42,14 @@ inline void addNavBar(QWidget *centralWidget,
         navLayout->addWidget(btn);
     }
 
-    if (QVBoxLayout *vbox = qobject_cast<QVBoxLayout*>(existingLayout)) {
-        vbox->insertLayout(0, navLayout);
-    } else {
-        existingLayout->addItem(navLayout);
-    }
+    QWidget *contentWrapper = new QWidget(centralWidget);
+    contentWrapper->setLayout(existingLayout);
+
+    QVBoxLayout *masterLayout = new QVBoxLayout(centralWidget);
+    masterLayout->addLayout(navLayout);
+    masterLayout->addWidget(contentWrapper);
+    centralWidget->setLayout(masterLayout);
 }
+
 
 #endif // PAGESWITCH_H

@@ -151,13 +151,10 @@ void MainWindow::loadBuses()
         const int availableSeatsValue = rowAvailableSeats.toInt();
         if (availableSeatsValue <= 0) {
             availableItem->setBackground(QColor("#f8d7da"));
-            availableItem->setForeground(QColor("#7a1c1c"));
         } else if (totalSeatsValue > 0 && (double(availableSeatsValue) / totalSeatsValue) <= 0.5) {
             availableItem->setBackground(QColor("#fff3cd"));
-            availableItem->setForeground(QColor("#7a5c00"));
         } else {
             availableItem->setBackground(QColor("#c8e6c9"));
-            availableItem->setForeground(QColor("#1b5e20"));
         }
         ui->tableWidget->setItem(row, 3, availableItem);
 

@@ -61,6 +61,8 @@ public:
         seedAdmin.bindValue(":password", PasswordUtil::hash("admin123"));
         seedAdmin.exec();
 
+        // MIGRATION: hash any password that predates hashing being introduced.
+        // Safe to run on every launch - already-hashed passwords are left alone.
         QSqlQuery userQuery;
         userQuery.exec("SELECT id, password FROM user");
         QList<QPair<int, QString>> toHash;
@@ -71,7 +73,7 @@ public:
                 toHash.append({id, storedPassword});
             }
         }
-        for (const auto &pair : toHash) {
+        for (const QPair<int, QString> &pair : toHash) {
             QSqlQuery upgradeQuery;
             upgradeQuery.prepare("UPDATE user SET password = :hashed WHERE id = :id");
             upgradeQuery.bindValue(":hashed", PasswordUtil::hash(pair.second));
@@ -82,20 +84,6 @@ public:
         return true;
     }
 
-private:
-    static void addColumnIfMissing(QSqlQuery &query, const QString &table, const QString &column, const QString &type) {
-        query.exec(QString("PRAGMA table_info(%1)").arg(table));
-        bool exists = false;
-        while (query.next()) {
-            if (query.value(1).toString().compare(column, Qt::CaseInsensitive) == 0) {
-                exists = true;
-                break;
-            }
-        }
-        if (!exists) {
-            query.exec(QString("ALTER TABLE %1 ADD COLUMN %2 %3").arg(table, column, type));
-        }
-    }
 };
 
 #endif // DATABASE_H

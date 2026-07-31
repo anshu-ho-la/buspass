@@ -19,7 +19,7 @@ class login : public QMainWindow
 
 public:
     explicit login(QWidget *parent = nullptr);
-    ~login() override;
+    ~login();
 
 private slots:
     void on_login_button_clicked();

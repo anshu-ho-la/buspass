@@ -11,6 +11,8 @@ login::login(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::login)
 {
+    Session::instance().login(-1);          //------------------------------------------
+
     ui->setupUi(this);
     setWindowTitle("Buspass");
     ui->centralwidget->setAttribute(Qt::WA_StyledBackground, true);

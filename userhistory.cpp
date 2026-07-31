@@ -128,7 +128,7 @@ void BookingHistory::loadBookings()
         QPushButton *editBtn = new QPushButton(alreadyDeparted ? "Departed" : "Edit", ui->tableWidget);
         editBtn->setEnabled(!alreadyDeparted);
         editBtn->setProperty("tableButton", true);
-        connect(editBtn, &QPushButton::clicked, this, [this, bookingId = rowBookingId, busID = rowBusID, seatsBooked = rowSeatsBooked]() {
+        connect(editBtn, &QPushButton::clicked, this, [this, bookingId = rowBookingId, busID = rowBusID, seatsBooked = rowSeatsBooked]() {     //lambda capture box
             editBookingId = bookingId;
             editBusID = busID;
             editCurrentSeats = seatsBooked;
@@ -220,18 +220,11 @@ void BookingHistory::editBooking()
     editMaxSeats = editAvailableSeats + editCurrentSeats;
 
     editOk = false;
-    editNewSeats = QInputDialog::getInt(
-        this,
-        "Edit Booking",
-        QString("How many seats would you like booked? (currently %1, %2 available to change to)")
-            .arg(editCurrentSeats)
-            .arg(editMaxSeats),
-        editCurrentSeats,
-        0,
-        editMaxSeats,
-        1,
-        &editOk
-        );
+    editNewSeats = QInputDialog::getInt(this,"Edit Booking",QString("How many seats would you like booked? (currently %1, upto %2 available.)")
+            .arg(editCurrentSeats) .arg(editMaxSeats),
+        editCurrentSeats,     //starting value
+        0,editMaxSeats,1    //min ,max ,stepup arrow
+        ,&editOk);   //ok or cancel
 
     if (!editOk || editNewSeats < 0 || editNewSeats == editCurrentSeats) {
         return;
@@ -310,7 +303,7 @@ void BookingHistory::editBooking()
     updateBusQuery.bindValue(":delta", editDelta);
     updateBusQuery.bindValue(":busID", editBusID);
 
-    if (!updateBusQuery.exec() || updateBusQuery.numRowsAffected() < 1) {
+    if (!updateBusQuery.exec()) {
         db.rollback();
         QMessageBox::critical(this, "Edit Booking", "Not enough seats remaining on this bus. Please try again.");
         qDebug() << "editBooking seat-decrement error:" << updateBusQuery.lastError().text();
@@ -349,7 +342,6 @@ void BookingHistory::downloadTicket()
     const int margin = pageWidth / 15;
     int y = margin;
 
-    const QString passengerDisplay = currentName.isEmpty() ? currentUsername : currentName;
     const double totalPrice = ticketPrice * ticketSeatsBooked;
 
     painter.setFont(QFont("Segoe UI", 16, QFont::Bold));
@@ -359,7 +351,8 @@ void BookingHistory::downloadTicket()
     painter.setFont(QFont("Segoe UI", 10));
     const QStringList lines = {
         QString("Booking ID: %1").arg(ticketBookingId),
-        QString("Passenger: %1").arg(passengerDisplay),
+        QString("Passenger: %1").arg(currentName),
+        QString("Passenger username: %1").arg(currentUsername),
         QString("Bus Name: %1").arg(ticketBusName),
         QString("Route: %1").arg(ticketRoute),
         QString("Departure Time: %1").arg(ticketDepartureTime),
