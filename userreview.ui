@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>365</width>
+    <width>458</width>
     <height>420</height>
    </rect>
   </property>
@@ -36,26 +36,14 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>30</width>
          <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <widget class="QWidget" name="formCard">
-       <property name="minimumSize">
-        <size>
-         <width>420</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>460</width>
-         <height>16777215</height>
-        </size>
-       </property>
+      <widget class="QFrame" name="formCard">
        <layout class="QVBoxLayout" name="mainLayout">
         <property name="spacing">
          <number>16</number>
@@ -122,7 +110,7 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>30</width>
          <height>20</height>
         </size>
        </property>
